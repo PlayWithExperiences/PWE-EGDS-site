@@ -1,10 +1,10 @@
-import {drawingPanels,bindDrawings} from './drawing-viewer.89300665c2d7.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.89300665c2d7.js';
-import {mountStructureMap} from './structure-map.89300665c2d7.js';
-import {valenceOf,displayTitle} from './feeling-groups.89300665c2d7.js';
-import {mountNetwork,graphData} from './network.89300665c2d7.js';
-import { marked } from './vendor/marked.89300665c2d7.js';
-import { text } from './copy.89300665c2d7.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.92b01ebda20f.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.92b01ebda20f.js';
+import {mountStructureMap} from './structure-map.92b01ebda20f.js';
+import {valenceOf,displayTitle} from './feeling-groups.92b01ebda20f.js';
+import {mountNetwork,graphData} from './network.92b01ebda20f.js';
+import { marked } from './vendor/marked.92b01ebda20f.js';
+import { text } from './copy.92b01ebda20f.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -183,7 +183,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.89300665c2d7.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.92b01ebda20f.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
