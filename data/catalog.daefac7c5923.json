@@ -1,7 +1,7 @@
 {
   "methodology": "0.3",
   "snapshotDate": "2026-09-10",
-  "scope": "Public-marked EGDS vocabulary plus direct public references; excludes drawings and private notes.",
+  "scope": "Public EGDS notes and approved Excalidraw snapshots, with source-linked public references.",
   "hubs": {
     "feelings": "n-9f37c3ecf11b",
     "factors": "n-c29e6d378bc7",
@@ -6036,6 +6036,87 @@
       }
     },
     {
+      "id": "n-2b3b5630f183",
+      "name": "emotional experience - 不满 Disapproval - surprise & sadness",
+      "title": {
+        "zh": "emotional experience - 不满",
+        "en": "Disapproval - surprise & sadness"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 不满 Disapproval - surprise & sadness.md",
+        "sha256": "0ee8f702421a890d639b8e8625e79a20b6205a7c4acbba3a7035363e3476b69a",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-01dd0fbc7152",
+      "name": "emotional experience - 乐观 optimism - anticipation & joy",
+      "title": {
+        "zh": "emotional experience - 乐观",
+        "en": "optimism - anticipation & joy"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 乐观 optimism - anticipation & joy.md",
+        "sha256": "03ba05184f4abe2806e3b3020562d79a8d865ca4d61d72079198c04d6680d790",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-a714ae3005d7",
+      "name": "emotional experience - 侵略性 aggressiveness - anger & anticipation",
+      "title": {
+        "zh": "emotional experience - 侵略性",
+        "en": "aggressiveness - anger & anticipation"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 侵略性 aggressiveness - anger & anticipation.md",
+        "sha256": "f69de20f58a0a907af80df8c8c564cc07e8b7b979564eddde20cc8601d43704b",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-5a5a2953b168",
+      "name": "emotional experience - 信任 trust",
+      "title": {
+        "zh": "emotional experience - 信任",
+        "en": "trust"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-f012799e3e2d",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 信任 trust.md",
+        "sha256": "b23478c8d90cc6e1fb59612230b15d1b63708b20ca1ef914de85116afcc0c1c4",
+        "publicMarked": true
+      }
+    },
+    {
       "id": "n-890589296f03",
       "name": "emotional experience - 兴趣 interest",
       "title": {
@@ -6049,17 +6130,177 @@
       "status": "note",
       "links": [
         {
+          "target": "n-873420a3f742",
+          "type": "related"
+        },
+        {
           "target": "n-c2786c0d78dc",
           "type": "have example"
         },
         {
           "target": "n-db363c070cef",
           "type": "achieved with"
+        },
+        {
+          "target": "n-873420a3f742",
+          "type": "opposes"
         }
       ],
       "source": {
         "path": "Unsorted/emotional experience - 兴趣 interest.md",
         "sha256": "d2d95d660441a9920d97285f307bc64971a9be821c7c734f4acd073a3b6129f4",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-873420a3f742",
+      "name": "emotional experience - 分心 distraction",
+      "title": {
+        "zh": "emotional experience - 分心",
+        "en": "distraction"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-890589296f03",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 分心 distraction.md",
+        "sha256": "f665c7afbaa831531b42f8399fb3d408ef03cb2bb3d4501100f1e663ecefa60d",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-f012799e3e2d",
+      "name": "emotional experience - 厌恶 disgust",
+      "title": {
+        "zh": "emotional experience - 厌恶",
+        "en": "disgust"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-5a5a2953b168",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 厌恶 disgust.md",
+        "sha256": "d5db770fc47c12db05b394c6336e3d19f0b2736565ad31367349aca993afd6ec",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-dc0a8a4dced2",
+      "name": "emotional experience - 宁静 Serenity",
+      "title": {
+        "zh": "emotional experience - 宁静",
+        "en": "Serenity"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-c89ad8edd3e0",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 宁静 Serenity.md",
+        "sha256": "dc5b5abcd3c07dfc2a2f546d7c0692c351480650a6705a36121921d5e61e9200",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-5cff206b4802",
+      "name": "emotional experience - 害怕 fear",
+      "title": {
+        "zh": "emotional experience - 害怕",
+        "en": "fear"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-30e88e54e914",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 害怕 fear.md",
+        "sha256": "0272f92ca3b44b1183958c6ff26c774a8deeb4d3a7a98d7294849a24adac7185",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-e3d53dac5451",
+      "name": "emotional experience - 崇拜 admiration",
+      "title": {
+        "zh": "emotional experience - 崇拜",
+        "en": "admiration"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-1f3ba2bc8a6b",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 崇拜 admiration.md",
+        "sha256": "f8d5f6e851d580d2042199f1f4624b92f626474f1e31ac440c4ffecd16fa087f",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-bcece8cc2e24",
+      "name": "emotional experience - 忧虑 apprehension",
+      "title": {
+        "zh": "emotional experience - 忧虑",
+        "en": "apprehension"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-0dbc240131e8",
+          "type": "opposite"
+        },
+        {
+          "target": "n-860ae6319890",
+          "type": "related"
+        },
+        {
+          "target": "n-9a07fa398ba6",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 忧虑 apprehension.md",
+        "sha256": "ef25c02f14e8d32f7a3643ab4ba65ad03277da81e3b54f15017ccc18284abb33",
         "publicMarked": true
       }
     },
@@ -6075,10 +6316,63 @@
       "body": "",
       "resources": [],
       "status": "index",
-      "links": [],
+      "links": [
+        {
+          "target": "n-851f0306c948",
+          "type": "related"
+        }
+      ],
       "source": {
         "path": "Unsorted/emotional experience - 快乐 joy.md",
         "sha256": "e480706c7116a1075843b729af3c136a0c4cf50c61318ceffc8ae3864056b194",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-2f6cd50d9f27",
+      "name": "emotional experience - 恐惧 terror",
+      "title": {
+        "zh": "emotional experience - 恐惧",
+        "en": "terror"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-4dc6e4e0b72b",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 恐惧 terror.md",
+        "sha256": "df1847771124ad82a3b86e0bfc2890669d0573b954236b75d1d9002c01132274",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-1f3ba2bc8a6b",
+      "name": "emotional experience - 恶心 loathing",
+      "title": {
+        "zh": "emotional experience - 恶心",
+        "en": "loathing"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-e3d53dac5451",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 恶心 loathing.md",
+        "sha256": "dc9ba359361c0749b0206caac98bf01d3a1643d38e6b21eedefa134868fa2e0c",
         "publicMarked": true
       }
     },
@@ -6094,10 +6388,39 @@
       "body": "",
       "resources": [],
       "status": "index",
-      "links": [],
+      "links": [
+        {
+          "target": "n-bcece8cc2e24",
+          "type": "related"
+        }
+      ],
       "source": {
         "path": "Unsorted/emotional experience - 恼人 annoyance.md",
         "sha256": "aec87b28f7716607eed43a17bf0232e885594a46188ff11adedbb3539bebcfc7",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-851f0306c948",
+      "name": "emotional experience - 悲伤 sadness",
+      "title": {
+        "zh": "emotional experience - 悲伤",
+        "en": "sadness"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-79850693ab47",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 悲伤 sadness.md",
+        "sha256": "87bd9d15a1609c36f9b4ab12234e9afbe2d3eb7b3665541bd64224411e82f07d",
         "publicMarked": true
       }
     },
@@ -6122,6 +6445,78 @@
       "source": {
         "path": "Unsorted/emotional experience - 惊喜 surprise.md",
         "sha256": "185c53cb8e82c25358d119eb9936e7048614d68eb01e0b93472492e9f35ab528",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-b250ceff6271",
+      "name": "emotional experience - 惊愕 amazement",
+      "title": {
+        "zh": "emotional experience - 惊愕",
+        "en": "amazement"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-90d95e51aafd",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 惊愕 amazement.md",
+        "sha256": "8533e0fc55bca4b4642aee049801cde07051970720e8758f9b3fdb643ae9e137",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-30e88e54e914",
+      "name": "emotional experience - 愤怒 anger",
+      "title": {
+        "zh": "emotional experience - 愤怒",
+        "en": "anger"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-5cff206b4802",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 愤怒 anger.md",
+        "sha256": "cbba9ec54dcce656cab80afd0fa3784737d4044734fc53e1808a5c6e786892c4",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-8e05003a9d48",
+      "name": "emotional experience - 接受 acceptance",
+      "title": {
+        "zh": "emotional experience - 接受",
+        "en": "acceptance"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-5013678a307e",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 接受 acceptance.md",
+        "sha256": "723dcb139d4ed8a85798bbb2a4eb0b0b427684fd8edfeabb65166bf93e0f1135",
         "publicMarked": true
       }
     },
@@ -6165,6 +6560,10 @@
         {
           "target": "n-f67587738d76",
           "type": "related"
+        },
+        {
+          "target": "n-8e05003a9d48",
+          "type": "related"
         }
       ],
       "source": {
@@ -6198,6 +6597,140 @@
       }
     },
     {
+      "id": "n-c89ad8edd3e0",
+      "name": "emotional experience - 沉思 忧戚 pensiveness",
+      "title": {
+        "zh": "emotional experience - 沉思 忧戚",
+        "en": "pensiveness"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-dc0a8a4dced2",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 沉思 忧戚 pensiveness.md",
+        "sha256": "1e5a87293d8753e02c06391acea824975955b053463ba0d8eb783e9828335822",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-fa7483cf77ed",
+      "name": "emotional experience - 爱 love - joy & trust",
+      "title": {
+        "zh": "emotional experience - 爱",
+        "en": "love - joy & trust"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 爱 love - joy & trust.md",
+        "sha256": "cd9d0413d76bf097c0f564e3db1efe4b370cde3b554ad47275dd19d374bd1070",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-41f302f94c3f",
+      "name": "emotional experience - 狂喜 ecstasy",
+      "title": {
+        "zh": "emotional experience - 狂喜",
+        "en": "ecstasy"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-800271a12cb4",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 狂喜 ecstasy.md",
+        "sha256": "8b574aa4d9c7ab1bc08da9d3469fe8e79748823d70b8176775a709da4cdf84c6",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-4dc6e4e0b72b",
+      "name": "emotional experience - 狂怒 rage",
+      "title": {
+        "zh": "emotional experience - 狂怒",
+        "en": "rage"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-2f6cd50d9f27",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 狂怒 rage.md",
+        "sha256": "dbb62f372b8f2eb7ded989487e91c542975a8e584ea95f8c9a7bca2bc6c0871a",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-800271a12cb4",
+      "name": "emotional experience - 痛苦 grief",
+      "title": {
+        "zh": "emotional experience - 痛苦",
+        "en": "grief"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [
+        {
+          "target": "n-41f302f94c3f",
+          "type": "related"
+        }
+      ],
+      "source": {
+        "path": "Unsorted/emotional experience - 痛苦 grief.md",
+        "sha256": "d6c887f7f192132af85c66d291fd15bddc14afc4b49f3121da28d21ddbef276c",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-d5ff16b95447",
+      "name": "emotional experience - 蔑视 contempt - disgust & anger",
+      "title": {
+        "zh": "emotional experience - 蔑视",
+        "en": "contempt - disgust & anger"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 蔑视 contempt - disgust & anger.md",
+        "sha256": "301a6aeea79c832601deead28fbaa25501830a19396e55e6bb5de2993c1ea8af",
+        "publicMarked": true
+      }
+    },
+    {
       "id": "n-90d95e51aafd",
       "name": "emotional experience - 警惕 vigilance",
       "title": {
@@ -6209,10 +6742,34 @@
       "body": "",
       "resources": [],
       "status": "index",
-      "links": [],
+      "links": [
+        {
+          "target": "n-b250ceff6271",
+          "type": "related"
+        }
+      ],
       "source": {
         "path": "Unsorted/emotional experience - 警惕 vigilance.md",
         "sha256": "089c5523125d719e9bf0c7aec094546f43251363345324fa1e81cceb611a4e70",
+        "publicMarked": true
+      }
+    },
+    {
+      "id": "n-af8d4eca92fa",
+      "name": "emotional experience - 顺从 submission - trust & fear",
+      "title": {
+        "zh": "emotional experience - 顺从",
+        "en": "submission - trust & fear"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/emotional experience - 顺从 submission - trust & fear.md",
+        "sha256": "3dc92f74655a3c48fe0c706fd3333fe47d278d8bba4c26b71f1e0e9cb0c80e8c",
         "publicMarked": true
       }
     },
@@ -10400,6 +10957,13 @@
         {
           "target": "n-15cd08b4ee25",
           "type": "opposite"
+        },
+        {
+          "target": "n-15cd08b4ee25",
+          "type": "opposes",
+          "origin": "excalidraw",
+          "drawingId": "d-d23b3335b7c9",
+          "elementId": "lW-v-ZeHdN_ue16O9NX7l"
         }
       ],
       "source": {
@@ -13559,7 +14123,7 @@
       "branch": null,
       "body": "",
       "resources": [],
-      "status": "index",
+      "status": "drawing",
       "links": [
         {
           "target": "n-dadd62de7138",
@@ -13618,7 +14182,259 @@
         "path": "Unsorted/subjective feeling - 探索 exploration.md",
         "sha256": "420fa02d66e920a5960d90b4691c9b2819931afe07463363e425023d81290f4c",
         "publicMarked": true
-      }
+      },
+      "drawings": [
+        {
+          "id": "d-d23b3335b7c9",
+          "name": "subjective feeling - 探索 exploration.excalidraw",
+          "svg": "drawings/d-d23b3335b7c9.daefac7c5923.svg",
+          "download": "drawings/d-d23b3335b7c9.daefac7c5923.excalidraw",
+          "width": 6916.23046875,
+          "height": 5441.208287378773,
+          "source": {
+            "path": "Excalidraw/subjective feeling - 探索 exploration.excalidraw.md",
+            "sha256": "7d20f99aa71d3e9cbbad8ac766841a31a8dd17c73d77ce697e926f42393c10fa",
+            "approval": "explicit-author-request"
+          },
+          "elements": 150,
+          "text": "[[exploration - gameplay & mechanics]]\n[[exploration - narrative content]]\n[[美学 aesthetics]]\n[[aesthetics - CG]]\n[[2024-0422-0053 战神4技能树使用 CG 进行展示]]\n[[玩法和挑战 gameplay & challenges]]\n[[2024-0423-0035 小鳄鱼爱洗澡 CG 教程 展现叙事和玩法]]\n[[2024-0423-0047 dota2 绕视野本身是一种机制 但玩家利用该机制来进行视野控制就是玩法 - ti6 - zai vs kpii]]\n[[gameplay & challenge - 养成验证 progression validation]]\n[[2024-0423-0141 艾尔登法环 加点行为本身是基于属性系统的游戏机制]]\n[[gameplay & challenge - 资源管理 resource management]]\n[[2024-0424-0034 星际争霸 资源管理]]\n[[game system - 技能系统 skill]]\n[[2024-0424-0050 最后纪元 技能树]]\n[[gameplay & challenge - collecting]]\n[[2024-0424-0059 阿凡达 潘多拉边境 采集本身是一种机制 但是玩家需要通过控制来得到更高品质的材料是一种玩法]]\n[[game mechanic - 简单交互 simple interaction feedback]]\n[[2024-0423-0041 黑魂宝箱怪 玩家需要进行辨别是一种玩法和挑战 辨别的难易是挑战]]\n[[gameplay & challenge - 制作玩法 crafting]]\n[[2024-0424-0132 王国之泪 特殊建造]]\n[[gameplay & challenge - 解谜玩法 puzzle]]\n[[2024-0424-0138 神秘海域4 海边的塔 puzzle]]\n[[gameplay & challenge - 环境玩法 environmental challenge]]\n[[2024-0424-0142 死亡搁浅 特殊天气影响行动本身是一种机制 但玩家需要控制平衡算是一种玩法]]\n[[aesthetics - environmental storytelling]]\n[[2024-0424-1322 艾尔登法环 王城 vs 灰城]]\n[[aesthetics - npc]]\n[[2024-0425-0026 FF7RE 爱丽丝攀爬语音]]\n[[2024-0425-0051 怪猎崛起 点击式教程]]\n[[gameplay & challenge - 实现步骤清晰的任务玩法 objective-based mission]]\n[[2024-0425-0056 怪猎崛起 指引式任务]]\n[[gameplay & challenge - map revealing]]\n[[2024-0425-0105 刺客信条奥德赛 鸟瞰点开图只是一种机制 不足以被称之为玩法 玩家寻找到达鸟瞰点的方法 可以算作玩法]]\n5\n10\n5\n[[2024-0420-2215 塞尔达旷野之息 将生锈武器丢给正在吸气的岩石八爪鱼 它会吐出新武器]]\n[[2024-0425-0120 黑魂3 鸟巢换物本身是机制 但是玩家探索和尝试如何换和怎么换就是玩法]]\n[[gameplay & challenge - 需要探索发现的任务玩法 discovery-based mission]]\n[[2024-0425-0134 艾尔登法环 菈妮线]]\n[[gameplay & challenge - 全局变化玩法 global change]]\n[[2024-0425-0145 底特律变人多重结局]]\n[[2024-0425-0151 塞尔达传说 旷野之息 拍照收集图鉴词条可以被视为一种玩法]]\n[[2024-0425-0157 西之绝境零之曙光 音频收集物本身是一种收集机制 但玩家寻找音频收集物的体验可以被视为玩法]]\n[[objective reason - 未知 unknown]]\n[[subjective feeling - 探索 exploration]]\n[[exploration - narrative content]]\n[[exploration - gameplay & mechanics]]\nContributes to\nincluding\n[[subjective feeling - 有意义的选择 meaningful choice]]\n[[subjective feeling - 好奇 curiosity]]\ndriven by\nenhanced by\n[[subjective feeling - 可重玩性 Replayability]]\nenhanced by\n[[objective reason - 正反馈循环 positive feedback loop]]\ncontributes to\nsupported by\n[[objective reason - 怀疑悬置 suspension of disbelieve]]\nsupported by\n[[objective reason - 叙事失调 Ludonarrative dissonance]]\nagainst\n[[情绪体验 Emotional Experiences]]\n[[emotional experience - 兴趣 interest]]\n[[emotional experience - 期待 anticipation]]\n[[emotional experience - 惊喜 surprise]]\n[[玩法和挑战 gameplay & challenges]]\n[[美学 aesthetics]]\nachieved with\ncaused by\nachieved with\n[[gameplay & challenge - 养成验证 progression validation]]\n[[gameplay & challenge - 资源管理 resource management]]\n[[game system - 技能系统 skill]]\n[[gameplay & challenge - collecting]]\n[[game mechanic - 简单交互 simple interaction feedback]]\n[[gameplay & challenge - 制作玩法 crafting]]\n[[gameplay & challenge - 解谜玩法 puzzle]]\n[[gameplay & challenge - 环境玩法 environmental challenge]]\n[[gameplay & challenge - 实现步骤清晰的任务玩法 objective-based mission]]\n[[gameplay & challenge - map revealing]]\n[[gameplay & challenge - 需要探索发现的任务玩法 discovery-based mission]]\n[[gameplay & challenge - 全局变化玩法 global change]]\n[[aesthetics - CG]]\n[[aesthetics - environmental storytelling]]\n[[aesthetics - npc]]\n[[objective reason - 负反馈循环 negative feedback loop]]\nopposes\ncontributes to\n[[subjective feeling - 无意义选择 meaningless choice]]\nopposes\ncontributes to\n[[objective reason - 风险和回报 risk and reward]]\nenhanced by\n[[subjective feeling - 有机的世界 organic and diegetic world]]\n[[emotional experience - 快乐 joy]]\ncontributes to",
+          "references": [
+            {
+              "name": "exploration - gameplay & mechanics",
+              "target": "n-9388c8f15555"
+            },
+            {
+              "name": "exploration - narrative content",
+              "target": "n-cc3bda493ed5"
+            },
+            {
+              "name": "美学 aesthetics",
+              "target": "n-50d8e8b9af3d"
+            },
+            {
+              "name": "aesthetics - CG",
+              "target": "n-9d8150a95749"
+            },
+            {
+              "name": "2024-0422-0053 战神4技能树使用 CG 进行展示",
+              "target": "n-fa66de0588a4"
+            },
+            {
+              "name": "玩法和挑战 gameplay & challenges",
+              "target": "n-3230819b19d3"
+            },
+            {
+              "name": "2024-0423-0035 小鳄鱼爱洗澡 CG 教程 展现叙事和玩法",
+              "target": "n-c8ab8756c13c"
+            },
+            {
+              "name": "2024-0423-0047 dota2 绕视野本身是一种机制 但玩家利用该机制来进行视野控制就是玩法 - ti6 - zai vs kpii",
+              "target": "n-1fab381de432"
+            },
+            {
+              "name": "gameplay & challenge - 养成验证 progression validation",
+              "target": "n-505679d66bd3"
+            },
+            {
+              "name": "2024-0423-0141 艾尔登法环 加点行为本身是基于属性系统的游戏机制",
+              "target": "n-6a6b3fe02110"
+            },
+            {
+              "name": "gameplay & challenge - 资源管理 resource management",
+              "target": "n-a75cb23acb62"
+            },
+            {
+              "name": "2024-0424-0034 星际争霸 资源管理",
+              "target": "n-a1e4199d49fe"
+            },
+            {
+              "name": "game system - 技能系统 skill",
+              "target": "n-c9d54b43a4a3"
+            },
+            {
+              "name": "2024-0424-0050 最后纪元 技能树",
+              "target": "n-43ec94faec90"
+            },
+            {
+              "name": "gameplay & challenge - collecting",
+              "target": "n-f7893b1a021b"
+            },
+            {
+              "name": "2024-0424-0059 阿凡达 潘多拉边境 采集本身是一种机制 但是玩家需要通过控制来得到更高品质的材料是一种玩法",
+              "target": "n-20e90f65f4b8"
+            },
+            {
+              "name": "game mechanic - 简单交互 simple interaction feedback",
+              "target": "n-b3093c7beb9a"
+            },
+            {
+              "name": "2024-0423-0041 黑魂宝箱怪 玩家需要进行辨别是一种玩法和挑战 辨别的难易是挑战",
+              "target": "n-460ee09436fb"
+            },
+            {
+              "name": "gameplay & challenge - 制作玩法 crafting",
+              "target": null
+            },
+            {
+              "name": "2024-0424-0132 王国之泪 特殊建造",
+              "target": "n-5a4d2b47de4e"
+            },
+            {
+              "name": "gameplay & challenge - 解谜玩法 puzzle",
+              "target": "n-60abd7f67104"
+            },
+            {
+              "name": "2024-0424-0138 神秘海域4 海边的塔 puzzle",
+              "target": "n-ca496cef07f6"
+            },
+            {
+              "name": "gameplay & challenge - 环境玩法 environmental challenge",
+              "target": "n-452f9cf28805"
+            },
+            {
+              "name": "2024-0424-0142 死亡搁浅 特殊天气影响行动本身是一种机制 但玩家需要控制平衡算是一种玩法",
+              "target": "n-d1955715fb0f"
+            },
+            {
+              "name": "aesthetics - environmental storytelling",
+              "target": "n-5dfde801e3d4"
+            },
+            {
+              "name": "2024-0424-1322 艾尔登法环 王城 vs 灰城",
+              "target": "n-783ac237b8c4"
+            },
+            {
+              "name": "aesthetics - npc",
+              "target": "n-94b4374bec8d"
+            },
+            {
+              "name": "2024-0425-0026 FF7RE 爱丽丝攀爬语音",
+              "target": "n-c2cb76ac7ee9"
+            },
+            {
+              "name": "2024-0425-0051 怪猎崛起 点击式教程",
+              "target": "n-97cbd5631208"
+            },
+            {
+              "name": "gameplay & challenge - 实现步骤清晰的任务玩法 objective-based mission",
+              "target": null
+            },
+            {
+              "name": "2024-0425-0056 怪猎崛起 指引式任务",
+              "target": "n-cc119b77e413"
+            },
+            {
+              "name": "gameplay & challenge - map revealing",
+              "target": "n-0b13a18e2f38"
+            },
+            {
+              "name": "2024-0425-0105 刺客信条奥德赛 鸟瞰点开图只是一种机制 不足以被称之为玩法 玩家寻找到达鸟瞰点的方法 可以算作玩法",
+              "target": "n-ee006a9023f2"
+            },
+            {
+              "name": "2024-0420-2215 塞尔达旷野之息 将生锈武器丢给正在吸气的岩石八爪鱼 它会吐出新武器",
+              "target": "n-96b265135e49"
+            },
+            {
+              "name": "2024-0425-0120 黑魂3 鸟巢换物本身是机制 但是玩家探索和尝试如何换和怎么换就是玩法",
+              "target": "n-5c235a88fca3"
+            },
+            {
+              "name": "gameplay & challenge - 需要探索发现的任务玩法 discovery-based mission",
+              "target": null
+            },
+            {
+              "name": "2024-0425-0134 艾尔登法环 菈妮线",
+              "target": "n-0d9bc57c3e72"
+            },
+            {
+              "name": "gameplay & challenge - 全局变化玩法 global change",
+              "target": "n-e6fe65654320"
+            },
+            {
+              "name": "2024-0425-0145 底特律变人多重结局",
+              "target": "n-d3fb640a0c7b"
+            },
+            {
+              "name": "2024-0425-0151 塞尔达传说 旷野之息 拍照收集图鉴词条可以被视为一种玩法",
+              "target": "n-6c4d326119b8"
+            },
+            {
+              "name": "2024-0425-0157 西之绝境零之曙光 音频收集物本身是一种收集机制 但玩家寻找音频收集物的体验可以被视为玩法",
+              "target": "n-633411b63459"
+            },
+            {
+              "name": "objective reason - 未知 unknown",
+              "target": "n-0c0400c00cb6"
+            },
+            {
+              "name": "subjective feeling - 探索 exploration",
+              "target": "n-0b28f50cfef0"
+            },
+            {
+              "name": "subjective feeling - 有意义的选择 meaningful choice",
+              "target": "n-798affb361f4"
+            },
+            {
+              "name": "subjective feeling - 好奇 curiosity",
+              "target": "n-dadd62de7138"
+            },
+            {
+              "name": "subjective feeling - 可重玩性 Replayability",
+              "target": "n-ba2077600407"
+            },
+            {
+              "name": "objective reason - 正反馈循环 positive feedback loop",
+              "target": "n-a8e313f0d0d7"
+            },
+            {
+              "name": "objective reason - 怀疑悬置 suspension of disbelieve",
+              "target": "n-ad786041e8c9"
+            },
+            {
+              "name": "objective reason - 叙事失调 Ludonarrative dissonance",
+              "target": "n-37d4a7837c0a"
+            },
+            {
+              "name": "情绪体验 Emotional Experiences",
+              "target": "n-0079005440d6"
+            },
+            {
+              "name": "emotional experience - 兴趣 interest",
+              "target": "n-890589296f03"
+            },
+            {
+              "name": "emotional experience - 期待 anticipation",
+              "target": "n-898401b64f9e"
+            },
+            {
+              "name": "emotional experience - 惊喜 surprise",
+              "target": "n-b97201effc46"
+            },
+            {
+              "name": "objective reason - 负反馈循环 negative feedback loop",
+              "target": "n-15cd08b4ee25"
+            },
+            {
+              "name": "subjective feeling - 无意义选择 meaningless choice",
+              "target": "n-231e2a897c28"
+            },
+            {
+              "name": "objective reason - 风险和回报 risk and reward",
+              "target": "n-eebc853ceadc"
+            },
+            {
+              "name": "subjective feeling - 有机的世界 organic and diegetic world",
+              "target": "n-7d82022ba403"
+            },
+            {
+              "name": "emotional experience - 快乐 joy",
+              "target": "n-79850693ab47"
+            }
+          ],
+          "renderer": "Obsidian Excalidraw 2.27.3"
+        }
+      ]
     },
     {
       "id": "n-95c24e122dc4",
@@ -16730,6 +17546,25 @@
       }
     },
     {
+      "id": "n-29a472584da1",
+      "name": "悔恨 remorse - sadness & disgust",
+      "title": {
+        "zh": "悔恨",
+        "en": "remorse - sadness & disgust"
+      },
+      "category": "references",
+      "branch": null,
+      "body": "",
+      "resources": [],
+      "status": "index",
+      "links": [],
+      "source": {
+        "path": "Unsorted/悔恨 remorse - sadness & disgust.md",
+        "sha256": "50168cebb035dffe7fb77395999f62a64fdc371c452671eafd64f4ed71d7e35b",
+        "publicMarked": true
+      }
+    },
+    {
       "id": "n-0079005440d6",
       "name": "情绪体验 Emotional Experiences",
       "title": {
@@ -16740,10 +17575,62 @@
       "branch": null,
       "body": "",
       "resources": [],
-      "status": "index",
+      "status": "drawing",
       "links": [
         {
+          "target": "n-4dc6e4e0b72b",
+          "type": "including"
+        },
+        {
+          "target": "n-2f6cd50d9f27",
+          "type": "including"
+        },
+        {
+          "target": "n-5cff206b4802",
+          "type": "including"
+        },
+        {
+          "target": "n-30e88e54e914",
+          "type": "including"
+        },
+        {
+          "target": "n-800271a12cb4",
+          "type": "including"
+        },
+        {
+          "target": "n-1f3ba2bc8a6b",
+          "type": "including"
+        },
+        {
+          "target": "n-bcece8cc2e24",
+          "type": "including"
+        },
+        {
+          "target": "n-f012799e3e2d",
+          "type": "including"
+        },
+        {
+          "target": "n-851f0306c948",
+          "type": "including"
+        },
+        {
+          "target": "n-d5ff16b95447",
+          "type": "including"
+        },
+        {
           "target": "n-0dbc240131e8",
+          "type": "including"
+        },
+        {
+          "target": "n-a714ae3005d7",
+          "type": "including"
+        },
+        {
+          "target": "n-2b3b5630f183",
+          "type": "including"
+        },
+        {
+          "target": "n-873420a3f742",
           "type": "including"
         },
         {
@@ -16752,6 +17639,18 @@
         },
         {
           "target": "n-90d95e51aafd",
+          "type": "including"
+        },
+        {
+          "target": "n-c89ad8edd3e0",
+          "type": "including"
+        },
+        {
+          "target": "n-b250ceff6271",
+          "type": "including"
+        },
+        {
+          "target": "n-af8d4eca92fa",
           "type": "including"
         },
         {
@@ -16767,11 +17666,39 @@
           "type": "including"
         },
         {
+          "target": "n-8e05003a9d48",
+          "type": "including"
+        },
+        {
           "target": "n-b97201effc46",
           "type": "including"
         },
         {
+          "target": "n-e3d53dac5451",
+          "type": "including"
+        },
+        {
+          "target": "n-5a5a2953b168",
+          "type": "including"
+        },
+        {
+          "target": "n-dc0a8a4dced2",
+          "type": "including"
+        },
+        {
           "target": "n-79850693ab47",
+          "type": "including"
+        },
+        {
+          "target": "n-01dd0fbc7152",
+          "type": "including"
+        },
+        {
+          "target": "n-41f302f94c3f",
+          "type": "including"
+        },
+        {
+          "target": "n-fa7483cf77ed",
           "type": "including"
         }
       ],
@@ -16779,7 +17706,187 @@
         "path": "Unsorted/情绪体验 Emotional Experiences.md",
         "sha256": "042c7cd61afe91c23cac89fe4d12909d7c042e0bbe640a02580cecaceb4c67f0",
         "publicMarked": true
-      }
+      },
+      "drawings": [
+        {
+          "id": "d-49192b528816",
+          "name": "Emotional Experiences20240907101425.excalidraw",
+          "svg": "drawings/d-49192b528816.daefac7c5923.svg",
+          "download": "drawings/d-49192b528816.daefac7c5923.excalidraw",
+          "width": 3294.72265625,
+          "height": 2860,
+          "source": {
+            "path": "Excalidraw/Emotional Experiences20240907101425.excalidraw.md",
+            "sha256": "4a48269ab8a6e05dad94821b3de22072e49e70792af5d959047d5ffd09cbcacf",
+            "approval": "dg-publish"
+          },
+          "elements": 41,
+          "text": "[[subjective feeling - 不安 焦虑 anxiety]]\n[[emotional experience - 无聊 boredom]]\n[[emotional experience - 宁静 Serenity]]\n[[emotional experience - 分心 distraction]]\n[[emotional experience - 沉思 忧戚 pensiveness]]\n[[emotional experience - 顺从 submission - trust & fear]]\n[[emotional experience - 接受 acceptance]]\n[[emotional experience - 信任 trust]]\n[[emotional experience - 悲伤 sadness]]\n[[emotional experience - 恼人 annoyance]]\n[[悔恨 remorse - sadness & disgust]]\n[[emotional experience - 不满 Disapproval - surprise & sadness]]\n[[emotional experience - 兴趣 interest]]\n[[emotional experience - 期待 anticipation]]\n[[emotional experience - 崇拜 admiration]]\n[[emotional experience - 痛苦 grief]]\n[[emotional experience - 恶心 loathing]]\n[[emotional experience - 忧虑 apprehension]]\n[[emotional experience - 厌恶 disgust]]\n[[emotional experience - 蔑视 contempt - disgust & anger]]\n[[emotional experience - 警惕 vigilance]]\n[[emotional experience - 乐观 optimism - anticipation & joy]]\n[[emotional experience - 爱 love - joy & trust]]\n[[emotional experience - 惊愕 amazement]]\n[[emotional experience - 敬畏 awe - fear & surprise]]\n[[惊喜 suprise]]\n[[emotional experience - 快乐 joy]]\n[[emotional experience - 害怕 fear]]\n[[emotional experience - 愤怒 anger]]\n[[emotional experience - 恐惧 terror]]\n[[emotional experience - 侵略性 aggressiveness - anger & anticipation]]\n[[emotional experience - 狂喜 ecstasy]]\n[[emotional experience - 狂怒 rage]]\n[[subjective feeling - 危险 danger]]\n[[subjective feeling - 邪恶 evil]]\n[[subjective feeling - 年轻 young]]\n[[subjective feeling - 视觉失衡 unbalance]]\n[[subjective feeling - 皇家 royal]]\n[[subjective feeling - 有趣 fun]]\n[[subjective feeling - 探索 exploration]]",
+          "references": [
+            {
+              "name": "subjective feeling - 不安 焦虑 anxiety",
+              "target": "n-da799c8dc2db"
+            },
+            {
+              "name": "emotional experience - 无聊 boredom",
+              "target": "n-5013678a307e"
+            },
+            {
+              "name": "emotional experience - 宁静 Serenity",
+              "target": "n-dc0a8a4dced2"
+            },
+            {
+              "name": "emotional experience - 分心 distraction",
+              "target": "n-873420a3f742"
+            },
+            {
+              "name": "emotional experience - 沉思 忧戚 pensiveness",
+              "target": "n-c89ad8edd3e0"
+            },
+            {
+              "name": "emotional experience - 顺从 submission - trust & fear",
+              "target": "n-af8d4eca92fa"
+            },
+            {
+              "name": "emotional experience - 接受 acceptance",
+              "target": "n-8e05003a9d48"
+            },
+            {
+              "name": "emotional experience - 信任 trust",
+              "target": "n-5a5a2953b168"
+            },
+            {
+              "name": "emotional experience - 悲伤 sadness",
+              "target": "n-851f0306c948"
+            },
+            {
+              "name": "emotional experience - 恼人 annoyance",
+              "target": "n-0dbc240131e8"
+            },
+            {
+              "name": "悔恨 remorse - sadness & disgust",
+              "target": "n-29a472584da1"
+            },
+            {
+              "name": "emotional experience - 不满 Disapproval - surprise & sadness",
+              "target": "n-2b3b5630f183"
+            },
+            {
+              "name": "emotional experience - 兴趣 interest",
+              "target": "n-890589296f03"
+            },
+            {
+              "name": "emotional experience - 期待 anticipation",
+              "target": "n-898401b64f9e"
+            },
+            {
+              "name": "emotional experience - 崇拜 admiration",
+              "target": "n-e3d53dac5451"
+            },
+            {
+              "name": "emotional experience - 痛苦 grief",
+              "target": "n-800271a12cb4"
+            },
+            {
+              "name": "emotional experience - 恶心 loathing",
+              "target": "n-1f3ba2bc8a6b"
+            },
+            {
+              "name": "emotional experience - 忧虑 apprehension",
+              "target": "n-bcece8cc2e24"
+            },
+            {
+              "name": "emotional experience - 厌恶 disgust",
+              "target": "n-f012799e3e2d"
+            },
+            {
+              "name": "emotional experience - 蔑视 contempt - disgust & anger",
+              "target": "n-d5ff16b95447"
+            },
+            {
+              "name": "emotional experience - 警惕 vigilance",
+              "target": "n-90d95e51aafd"
+            },
+            {
+              "name": "emotional experience - 乐观 optimism - anticipation & joy",
+              "target": "n-01dd0fbc7152"
+            },
+            {
+              "name": "emotional experience - 爱 love - joy & trust",
+              "target": "n-fa7483cf77ed"
+            },
+            {
+              "name": "emotional experience - 惊愕 amazement",
+              "target": "n-b250ceff6271"
+            },
+            {
+              "name": "emotional experience - 敬畏 awe - fear & surprise",
+              "target": "n-483403e85f4a"
+            },
+            {
+              "name": "惊喜 suprise",
+              "target": null
+            },
+            {
+              "name": "emotional experience - 快乐 joy",
+              "target": "n-79850693ab47"
+            },
+            {
+              "name": "emotional experience - 害怕 fear",
+              "target": "n-5cff206b4802"
+            },
+            {
+              "name": "emotional experience - 愤怒 anger",
+              "target": "n-30e88e54e914"
+            },
+            {
+              "name": "emotional experience - 恐惧 terror",
+              "target": "n-2f6cd50d9f27"
+            },
+            {
+              "name": "emotional experience - 侵略性 aggressiveness - anger & anticipation",
+              "target": "n-a714ae3005d7"
+            },
+            {
+              "name": "emotional experience - 狂喜 ecstasy",
+              "target": "n-41f302f94c3f"
+            },
+            {
+              "name": "emotional experience - 狂怒 rage",
+              "target": "n-4dc6e4e0b72b"
+            },
+            {
+              "name": "subjective feeling - 危险 danger",
+              "target": "n-96bb488327b4"
+            },
+            {
+              "name": "subjective feeling - 邪恶 evil",
+              "target": "n-e54d8da4fe4d"
+            },
+            {
+              "name": "subjective feeling - 年轻 young",
+              "target": "n-3b11f83c0b32"
+            },
+            {
+              "name": "subjective feeling - 视觉失衡 unbalance",
+              "target": "n-860ae6319890"
+            },
+            {
+              "name": "subjective feeling - 皇家 royal",
+              "target": "n-c3a982434782"
+            },
+            {
+              "name": "subjective feeling - 有趣 fun",
+              "target": "n-942d641e4500"
+            },
+            {
+              "name": "subjective feeling - 探索 exploration",
+              "target": "n-0b28f50cfef0"
+            }
+          ],
+          "renderer": "Obsidian Excalidraw 2.27.3"
+        }
+      ]
     },
     {
       "id": "n-1ff23ccd2390",
@@ -17413,6 +18520,10 @@
       "status": "index",
       "links": [
         {
+          "target": "n-dc0a8a4dced2",
+          "type": "contributes to"
+        },
+        {
           "target": "n-c70ae0447f62",
           "type": "contributes to"
         },
@@ -17442,6 +18553,14 @@
       "links": [
         {
           "target": "n-90d95e51aafd",
+          "type": "contributes to"
+        },
+        {
+          "target": "n-5cff206b4802",
+          "type": "contributes to"
+        },
+        {
+          "target": "n-bcece8cc2e24",
           "type": "contributes to"
         },
         {
@@ -17481,6 +18600,10 @@
           "type": "contributes to"
         },
         {
+          "target": "n-01dd0fbc7152",
+          "type": "contributes to"
+        },
+        {
           "target": "n-05f83155cce8",
           "type": "contributes to"
         },
@@ -17510,6 +18633,10 @@
       "links": [
         {
           "target": "n-483403e85f4a",
+          "type": "contributes to"
+        },
+        {
+          "target": "n-e3d53dac5451",
           "type": "contributes to"
         },
         {

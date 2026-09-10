@@ -1,6 +1,7 @@
-import {relationName} from './content-model.js';
-import {mapCamera} from './map-camera.js';
-import {valenceOf,displayTitle} from './feeling-groups.js';
+import {mapFullscreen} from './map-fullscreen.daefac7c5923.js';
+import {relationName,hierarchyTypes} from './content-model.daefac7c5923.js';
+import {mapCamera} from './map-camera.daefac7c5923.js';
+import {valenceOf,displayTitle} from './feeling-groups.daefac7c5923.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all'){
@@ -15,7 +16,18 @@ export function graphData(catalog, selected='', scope='all'){
   for(let step=0;step<3;step++)for(const e of edges)if(e.type==='supported by'&&visible.has(e.from)&&['游戏系统 game systems','游戏机制 game mechanics'].includes(byId.get(e.from)?.name))visible.add(e.to);
 
  }
- return {nodes:all.filter(n=>visible.has(n.id)),edges:edges.filter(e=>visible.has(e.from)&&visible.has(e.to)),total:all.length,totalEdges:edges.length};
+ const depths=leverDepths(all,edges);
+ return {depths,nodes:all.filter(n=>visible.has(n.id)),edges:edges.filter(e=>visible.has(e.from)&&visible.has(e.to)),total:all.length,totalEdges:edges.length};
+}
+export function leverDepths(nodes,edges){
+ const ids=new Set(nodes.filter(n=>n.category==='levers').map(n=>n.id)),parents=new Map([...ids].map(id=>[id,[]]));
+ for(const e of edges)if(ids.has(e.from)&&ids.has(e.to)&&hierarchyTypes.includes(e.type))parents.get(e.to).push(e.from);
+ const memo=new Map();function depth(id,path=new Set()){
+  if(path.has(id))return 0;if(memo.has(id))return memo.get(id);
+  const next=new Set(path).add(id),up=parents.get(id).filter(p=>!path.has(p));
+  const value=up.length?1+Math.max(...up.map(p=>depth(p,next))):0;memo.set(id,value);return value;
+ }
+ return Object.fromEntries([...ids].map(id=>[id,depth(id)]));
 }
 export function graphLayout(data){
  const placed=[],bands=[];let y=200;
@@ -27,8 +39,13 @@ export function graphLayout(data){
    const ns=rows.filter(n=>category==='feelings'?(valenceOf(n)===group||(group==='neutral'&&valenceOf(n)==='unclassified')):category==='levers'?(n.branch||'gameplay')===group:true);
    const columns=category==='factors'?9:3;
    const x=LEFT+(groups.length===1?0:index*384);
-   ns.forEach((n,i)=>placed.push({...n,x:x+(i%columns)*(NW+GAP),y:y+78+Math.floor(i/columns)*(NH+GAP),w:NW,h:NH}));
-   height=Math.max(height,82+Math.ceil(ns.length/columns)*(NH+GAP));
+   let offset=0;const depths=data.depths||leverDepths(data.nodes,data.edges);
+   const ranks=category==='levers'?[...new Set(ns.map(n=>depths[n.id]||0))].sort((a,b)=>a-b):[0];
+   for(const rank of ranks){const row=category==='levers'?ns.filter(n=>(depths[n.id]||0)===rank):ns;
+    row.forEach((n,i)=>placed.push({...n,x:x+(i%columns)*(NW+GAP),y:y+78+offset+Math.floor(i/columns)*(NH+GAP),w:NW,h:NH}));
+    offset+=Math.ceil(row.length/columns)*(NH+GAP)+24;
+   }
+   height=Math.max(height,82+offset);
   });
   bands.push({category,groups,y:top,height});y+=height+24;
  }
@@ -36,21 +53,26 @@ export function graphLayout(data){
 }
 export function focusLayout(data,selected){
  const root=data.nodes.find(n=>n.id===selected);if(!root)return graphLayout(data);
- const byId=new Map(data.nodes.map(n=>[n.id,n])),assigned=new Set([selected]),panels=[];
- const priority=['supported by','caused by','driven by','achieved with','including','consist of','enhanced by','related'];
- const edges=[...data.edges].sort((a,b)=>(priority.indexOf(a.type)<0?99:priority.indexOf(a.type))-(priority.indexOf(b.type)<0?99:priority.indexOf(b.type)));
- const groups=new Map();
- for(const e of edges){if(e.from!==selected&&e.to!==selected)continue;const direction=e.from===selected?'out':'in',id=direction==='out'?e.to:e.from;if(assigned.has(id))continue;assigned.add(id);const key=direction+':'+e.type;if(!groups.has(key))groups.set(key,{type:e.type,direction,depth:1,nodes:[]});groups.get(key).nodes.push(byId.get(id));}
- const ranks=new Map([...assigned].map(id=>[id,id===selected?0:1]));
- for(let step=0;step<3;step++)for(const e of edges)if(ranks.has(e.from)&&!ranks.has(e.to))ranks.set(e.to,ranks.get(e.from)+1);
- for(const n of data.nodes)if(!assigned.has(n.id)){const depth=ranks.get(n.id)||2,key='chain:'+depth;if(!groups.has(key))groups.set(key,{type:'supported by',direction:'chain',depth,nodes:[]});groups.get(key).nodes.push(n);}
- for(const group of groups.values()){const cols=Math.min(4,group.nodes.length),width=Math.max(210,cols*172+12),height=64+Math.ceil(group.nodes.length/cols)*58;panels.push({...group,cols,width,height});}
- panels.sort((a,b)=>a.depth-b.depth);
- let x=24,y=150,rowHeight=0,depth=1,maxX=500;const placed=[];
- for(const group of panels){if(group.depth!==depth||x+group.width>1200){y+=rowHeight+22;x=24;rowHeight=0;depth=group.depth;}group.x=x;group.y=y;group.nodes.forEach((n,i)=>placed.push({...n,x:x+12+(i%group.cols)*172,y:y+52+Math.floor(i/group.cols)*58,w:160,h:46}));x+=group.width+18;rowHeight=Math.max(rowHeight,group.height);maxX=Math.max(maxX,x);}
- const width=maxX+6,height=panels.length?y+rowHeight+24:190;
- placed.unshift({...root,x:(width-240)/2,y:38,w:240,h:60});
- return {nodes:placed,bands:[],focusGroups:panels,width,height};
+ // Focus changes spacing and scope, never the cognitive layer of an entry.
+ const placed=[],bands=[];let y=200;
+ for(const category of ['feelings','factors','levers']){
+  const ns=data.nodes.filter(n=>n.category===category),depths=data.depths||leverDepths(data.nodes,data.edges);
+  const ranks=new Map(ns.map(n=>[n.id,category==='levers'?(depths[n.id]||0):0]));
+  let rowY=y+60;
+  for(const rank of [...new Set(ranks.values())].sort((a,b)=>a-b)){
+   const row=ns.filter(n=>ranks.get(n.id)===rank),active=row.find(n=>n.id===selected);
+   const others=row.filter(n=>n!==active);if(active)others.splice(Math.floor(others.length/2),0,active);
+   const cols=Math.min(5,others.length);
+   for(let i=0;i<others.length;i++){
+    const line=Math.floor(i/cols),count=Math.min(cols,others.length-line*cols);
+    const start=(W-count*200-(count-1)*24)/2;
+    placed.push({...others[i],x:start+(i%cols)*224,y:rowY+line*66,w:200,h:46});
+   }
+   rowY+=Math.ceil(others.length/cols)*66;
+  }
+  const height=Math.max(100,rowY-y+10);bands.push({category,groups:[],y,height});y+=height+24;
+ }
+ return {nodes:placed,bands,width:W,height:y};
 }
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function lines(text,limit=104,font=14){
@@ -65,16 +87,16 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
  const label=n=>displayTitle(n,lang);
  const groupLabel={negative:zh?'负向':'Negative',neutral:zh?'中性 / 复合':'Neutral / mixed',positive:zh?'正向':'Positive',all:zh?'感受诱因':'Eliciting factors',gameplay:zh?'玩法与挑战':'Gameplay & challenges',narrative:zh?'叙事':'Narrative',aesthetics:zh?'美学':'Aesthetics'};
  const layerLabel={feelings:zh?'02 主观感受':'02 Subjective feelings',factors:zh?'03 感受诱因':'03 Eliciting factors',levers:zh?'04 设计杠杆':'04 Design levers'};
- host.innerHTML=`<div class="network-toolbar"><div class="network-modes"><button data-mode="focus">${zh?'选中节点的关系':'Selected neighborhood'}</button><button data-mode="all">${zh?'全部关系':'All relationships'}</button></div><div class="network-zoom"><button data-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output>100%</output><button data-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-zoom="reset">100%</button><button data-zoom="fit">${zh?'全图':'Fit graph'}</button></div></div><p class="network-help">${zh?'拖拽平移，滚轮缩放；点选词条居中重排，点击空白返回全图。感受按倾向分区，连线依据笔记与作者补充。':'Drag to pan, scroll to zoom. Select a node to rearrange its connections; click blank space to return to the full map.'}</p><div class="network-jumps">${['feelings','factors','levers'].map(k=>`<button data-jump="${k}">${layerLabel[k]} ↓</button>`).join('')}</div><div class="network-viewport" tabindex="0" aria-label="${zh?'可拖拽缩放的关系地图':'Pannable and zoomable relationship map'}"><div class="network-space"><svg class="network-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${zh?'体验形态、主观感受、感受诱因、设计杠杆':'Experience forms, feelings, factors, and design levers'}"></svg></div></div><div class="network-status" role="status"></div><section class="network-inspector" aria-live="polite"></section>`;
+ host.innerHTML=`<div class="network-toolbar"><div class="network-modes"><button data-mode="focus">${zh?'选中节点的关系':'Selected neighborhood'}</button><button data-mode="all">${zh?'全部关系':'All relationships'}</button></div><div class="network-zoom"><button data-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output>100%</output><button data-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-zoom="reset">100%</button><button data-zoom="fit">${zh?'全图':'Fit graph'}</button></div></div><p class="network-help">${zh?'拖拽平移，滚轮缩放；点选词条聚拢关联内容，同类保持同层，点击空白返回全图。感受按倾向分区，连线依据笔记与作者补充。':'Drag to pan, scroll to zoom. Select a node to gather its connections while retaining their layers; click blank space to return to the full map.'}</p><div class="network-jumps">${['feelings','factors','levers'].map(k=>`<button data-jump="${k}">${layerLabel[k]} ↓</button>`).join('')}</div><div class="network-viewport" tabindex="0" aria-label="${zh?'可拖拽缩放的关系地图':'Pannable and zoomable relationship map'}"><div class="network-space"><svg class="network-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${zh?'体验形态、主观感受、感受诱因、设计杠杆':'Experience forms, feelings, factors, and design levers'}"></svg></div></div><div class="network-status" role="status"></div><section class="network-inspector" aria-live="polite"></section>`;
  const viewport=host.querySelector('.network-viewport'),svg=host.querySelector('svg'),space=host.querySelector('.network-space');let layout,data,camera;
  function zoom(){if(!camera){camera=mapCamera(viewport,svg,{width:layout.width,height:layout.height,onZoom:value=>{scale=value;host.querySelector('output').textContent=Math.round(value*100)+'%';}});camera.center(layout.width/2,viewport.clientHeight/2,1);}else{camera.setSize(layout.width,layout.height);camera.apply();}}
  function draw(){
   data=graphData(catalog,current,mode);layout=mode==='focus'?focusLayout(data,current):graphLayout(data);const map=new Map(layout.nodes.map(n=>[n.id,n]));const connected=new Set(current?[current]:[]);for(const e of data.edges)if(e.from===current||e.to===current){connected.add(e.from);connected.add(e.to);}
   svg.setAttribute('width',layout.width);svg.setAttribute('height',layout.height);
   let html=`<defs><marker id="recorded-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="currentColor"/></marker></defs>`;
-  if(mode==='all')html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience form · observation scale'}</text>`;
+  html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience form · observation scale'}</text>`;
   const forms=zh?['体验曲线','体验段落','体验循环','体验瞬间']:['Experience curve','Experience passage','Experience loop','Experience moment'];
-  if(mode==='all')forms.forEach((name,i)=>{html+=`<a href="#/entry/form-${i}" class="network-form"><rect x="${468}" y="${43+i*30}" width="264" height="26" rx="3"/><text x="${480}" y="${61+i*30}">${i+1}. ${name}</text></a>`});
+  forms.forEach((name,i)=>{html+=`<a href="#/entry/form-${i}" class="network-form"><rect x="${468}" y="${43+i*30}" width="264" height="26" rx="3"/><text x="${480}" y="${61+i*30}">${i+1}. ${name}</text></a>`});
   for(const band of layout.bands){html+=`<rect x="0" y="${band.y}" width="1200" height="${band.height}" class="network-band ${band.category}"/><text x="24" y="${band.y+28}" class="network-layer-title">${layerLabel[band.category]}</text>`;
    band.groups.forEach((g,i)=>{html+=`<text x="${LEFT+i*384}" y="${band.y+59}" class="network-group ${g}">${escape(groupLabel[g])}</text>`});
   }
@@ -84,13 +106,13 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
    else {const down=a.y<b.y;const ax=a.x+a.w/2,ay=a.y+(down?a.h:0),bx=b.x+b.w/2,by=b.y+(down?0:b.h);const mid=(ay+by)/2;path=`M${ax} ${ay} C${ax} ${mid} ${bx} ${mid} ${bx} ${by}`;}
    html+=`<path d="${path}" class="network-edge ${adjacent?'highlight':mode==='all'&&current?'muted-edge':mode==='focus'?'focus-edge':''}" data-from="${e.from}" data-to="${e.to}" data-relation="${escape(e.type)}" ${adjacent||mode==='focus'?'marker-end="url(#recorded-arrow)"':''}><title>${escape(label(a)+' — '+e.type+' → '+label(b))}</title></path>`;
   }
-  for(const n of layout.nodes){const ls=lines(label(n),n.w-16,n.id===current&&mode==='focus'?16:14);html+=`<g class="network-node ${n.id===current?'selected':''} ${mode==='all'&&current&&!connected.has(n.id)?'unrelated':''} ${n.category==='feelings'?valenceOf(n):n.category}" tabindex="0" role="button" aria-pressed="${n.id===current}" aria-label="${escape(label(n))}" data-node="${n.id}" transform="translate(${n.x},${n.y})"><title>${escape(label(n))}</title><rect width="${n.w}" height="${n.h}" rx="3"/>${ls.map((l,i)=>`<text x="${n.id===current&&mode==='focus'?n.w/2:8}" text-anchor="${n.id===current&&mode==='focus'?'middle':'start'}" y="${ls.length===1?n.h/2+5:n.h/2-4+i*17}">${escape(l)}</text>`).join('')}</g>`;}
+  for(const n of layout.nodes){const ls=lines(label(n),n.w-16,n.id===current&&mode==='focus'?16:14);html+=`<g class="network-node ${n.id===current?'selected':''} ${mode==='all'&&current&&!connected.has(n.id)?'unrelated':''} ${n.category==='feelings'?valenceOf(n):n.category}" tabindex="0" role="button" aria-pressed="${n.id===current}" aria-label="${escape(label(n))}" data-layer="${n.category}" data-node="${n.id}" transform="translate(${n.x},${n.y})"><title>${escape(label(n))}</title><rect width="${n.w}" height="${n.h}" rx="3"/>${ls.map((l,i)=>`<text x="${n.id===current&&mode==='focus'?n.w/2:8}" text-anchor="${n.id===current&&mode==='focus'?'middle':'start'}" y="${ls.length===1?n.h/2+5:n.h/2-4+i*17}">${escape(l)}</text>`).join('')}</g>`;}
   svg.innerHTML=html;zoom();
   if(mode==='focus')camera.fit();host.querySelector('.network-jumps').hidden=mode==='focus';svg.classList.toggle('focus-layout',mode==='focus');
   host.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
-  host.querySelector('.network-status').textContent=zh?`当前 ${data.nodes.length} / ${data.total} 个核心词条，${data.edges.length} 条关系。${mode==='focus'?'围绕选中词条按关系重排。':''}`:`${data.nodes.length} / ${data.total} core entries; ${data.edges.length} recorded links.${mode==='focus'?' Rearranged around the selected entry.':''}`;
+  host.querySelector('.network-status').textContent=zh?`当前 ${data.nodes.length} / ${data.total} 个核心词条，${data.edges.length} 条关系。${mode==='focus'?'关联内容已聚拢，保留所属层级。':''}`:`${data.nodes.length} / ${data.total} core entries; ${data.edges.length} recorded links.${mode==='focus'?' Connections gathered within their original layers.':''}`;
   const n=allMap.get(current);const edges=n?graphData(catalog).edges.filter(e=>e.from===current||e.to===current):[];
-  host.querySelector('.network-inspector').innerHTML=n?`<div><span>${zh?'已选择':'Selected'}</span><h2>${escape(label(n))}</h2><a href="#/entry/${n.id}">${zh?'阅读词条':'Read entry'} →</a></div><div class="network-relations">${edges.length?relationGroups(edges,current,allMap,label,zh):`<p>${zh?'当前范围内尚无已记录连线。':'No recorded connections in this view.'}</p>`}</div>`:`<p>${zh?'选择一个词条，查看它的分组关系。':'Select an entry to inspect its grouped relationships.'}</p>`;
+  host.querySelector('.network-inspector').innerHTML=n?`<div><span>${zh?'已选择':'Selected'} · ${layerLabel[n.category]||''}</span><h2>${escape(label(n))}</h2><a href="#/entry/${n.id}">${zh?'阅读词条':'Read entry'} →</a></div><div class="network-relations">${edges.length?relationGroups(edges,current,allMap,label,zh):`<p>${zh?'当前范围内尚无已记录连线。':'No recorded connections in this view.'}</p>`}</div>`:`<p>${zh?'选择一个词条，查看它的分组关系。':'Select an entry to inspect its grouped relationships.'}</p>`;
  }
  function select(id){current=id;mode='focus';draw();svg.querySelector(`[data-node="${id}"]`)?.focus({preventScroll:true});viewport.scrollIntoView({block:'nearest',behavior:'instant'});onChange({selected:current,scope:mode});}
  function reset(){current='';mode='all';draw();camera.fit();onChange({selected:'',scope:'all'});}
@@ -104,6 +126,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
 
  });
  draw();
+ mapFullscreen(host,host.querySelector('.network-zoom'),{lang,onResize:()=>camera.fit()});
 }
 
 function relationGroups(edges,current,allMap,label,zh){

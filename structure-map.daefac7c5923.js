@@ -1,4 +1,5 @@
-import {mapCamera} from './map-camera.js';
+import {mapFullscreen} from './map-fullscreen.daefac7c5923.js';
+import {mapCamera} from './map-camera.daefac7c5923.js';
 export function mountStructureMap(host,{lang='zh',onOpen=()=>{}}={}){
  const zh=lang==='zh';
  const labels=[['体验形态','Experience form'],['主观感受','Subjective feelings'],['感受诱因','Eliciting factors'],['设计杠杆','Design levers']];
@@ -26,7 +27,7 @@ export function mountStructureMap(host,{lang='zh',onOpen=()=>{}}={}){
  content+=edge('M180 724V765H900V724',zh?'相互增强':'enhanced by',540,771,true);
  ['narrative','gameplay','aesthetics'].forEach((key,index)=>{const x=40+index*360;subs[key].forEach((row,i)=>{content+=node(x,810+i*90,280,80,row[zh?0:1],row[zh?2:3],key,'sublever');});});
  host.innerHTML=`<div class="structure-map-tools"><span>${zh?'点击节点展开内容 · 拖拽平移 · 滚轮缩放':'Select a node to open it · Drag to pan · Scroll to zoom'}</span><div><button data-map-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output></output><button data-map-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-map-zoom="fit">${zh?'全图':'Fit'}</button></div></div><div class="structure-map-viewport" tabindex="0" aria-label="${zh?'EGDS整体结构地图':'EGDS structure map'}"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1100" class="structure-map-svg" role="group">${content}</svg></div><p class="structure-map-caption">${zh?'依据作者结构图整理，采用 v0.3 术语。':'Adapted from the author’s diagrams using v0.3 terminology.'}</p>`;
- const viewport=host.querySelector('.structure-map-viewport'),svg=host.querySelector('svg');const camera=mapCamera(viewport,svg,{width:1080,height:1100,onZoom:value=>host.querySelector('output').textContent=Math.round(value*100)+'%'});camera.fit();
+ const viewport=host.querySelector('.structure-map-viewport'),svg=host.querySelector('svg');const camera=mapCamera(viewport,svg,{width:1080,height:1100,onZoom:value=>host.querySelector('output').textContent=Math.round(value*100)+'%'});camera.fit();mapFullscreen(host,host.querySelector('.structure-map-tools>div'),{lang,onResize:()=>camera.fit()});
  function open(target){if(target){onOpen(target.dataset.open);}}
  svg.addEventListener('click',e=>open(e.target.closest('[data-open]')));
  svg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(e.target.closest('[data-open]'));}});

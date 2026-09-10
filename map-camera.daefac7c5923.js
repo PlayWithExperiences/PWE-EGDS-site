@@ -1,7 +1,7 @@
 // A map camera: transform the drawing, never scroll an inner document.
-export function mapCamera(viewport, drawing, {width,height,onZoom=()=>{}}){
+export function mapCamera(viewport, drawing, {width,height,onZoom=()=>{},minScale=.12}){
  let scale=1,x=0,y=0,drag=null,suppressClick=false;
- const clamp=v=>Math.max(.12,Math.min(2.5,v));
+ const clamp=v=>Math.max(minScale,Math.min(2.5,v));
  function apply(){drawing.style.transformOrigin='0 0';drawing.style.transform=`translate(${x}px, ${y}px) scale(${scale})`;viewport.dataset.camera=`${x},${y},${scale}`;onZoom(scale);}
  function zoomTo(next,anchor={x:viewport.clientWidth/2,y:viewport.clientHeight/2}){next=clamp(next);const ratio=next/scale;x=anchor.x-(anchor.x-x)*ratio;y=anchor.y-(anchor.y-y)*ratio;scale=next;apply();}
  function fit(){scale=clamp(Math.min((viewport.clientWidth-32)/width,(viewport.clientHeight-32)/height,1));x=(viewport.clientWidth-width*scale)/2;y=(viewport.clientHeight-height*scale)/2;apply();}

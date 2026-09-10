@@ -88,3 +88,32 @@ html[lang=en] .hero h1{font-size:clamp(24px,3.1vw,46px)}
 [data-theme=dark] .feeling-table.negative caption{border-color:#c7958c}
 [data-theme=dark] .feeling-table.positive caption{border-color:#a5c28e}
 [data-theme=dark] ::selection{background:#78553e;color:#fff4df}
+:root[data-theme=dark]{--paper:#141b2b;--ink:#e8edf6;--muted:#b0bed1;--line:#37465d;--accent:#e5af8d;--wash:#1e2b41}
+[data-theme=dark] .system-section{background:#101827}
+[data-theme=dark] .network-viewport{background:#101929}
+[data-theme=dark] .network-band{fill:#1b283c}
+[data-theme=dark] .network-band.feelings{fill:#202b3e}
+[data-theme=dark] .network-band.factors{fill:#19273a}
+[data-theme=dark] .network-band.levers{fill:#182337}
+[data-theme=dark] .network-node rect,[data-theme=dark] .network-form rect{fill:#223149;stroke:#8498b4}
+[data-theme=dark] .network-node.negative rect{fill:#402c35;stroke:#b58b94}
+[data-theme=dark] .network-node.neutral rect{fill:#353444;stroke:#a4a0b5}
+[data-theme=dark] .network-node.positive rect{fill:#253e3a;stroke:#81aaa0}
+[data-theme=dark] .network-node.selected rect{fill:#4b3a39;stroke:var(--accent)}
+[data-theme=dark] .focus-group-bg{fill:#1d2a40;stroke:var(--line)}
+[data-theme=dark] .structure-map-node rect{fill:#1d2b43;stroke:#879bb6}
+[data-theme=dark] .structure-map-node.sublever rect{fill:#24334c;stroke:#879bb6}
+[data-theme=dark] .structure-map-node:hover rect,[data-theme=dark] .structure-map-node:focus rect{fill:#3e394b;stroke:var(--accent)}
+[data-theme=dark] .structure-map-edge{stroke:#aabbd3}
+.structure-expansion{display:flex;justify-content:flex-end;margin-bottom:18px}.structure-expansion button{font-size:15px;padding:9px 16px;border:1px solid var(--line)}
+#structure-map:fullscreen,#relationship-network:fullscreen,.excalidraw-panel:fullscreen,.is-map-fullscreen{box-sizing:border-box;background:var(--paper);padding:18px;width:100vw;height:100dvh;max-width:none;overflow:hidden}
+.is-map-fullscreen{position:fixed;inset:0;z-index:100}
+:fullscreen .structure-map-viewport,:fullscreen .network-viewport,:fullscreen .excalidraw-viewport,.is-map-fullscreen .structure-map-viewport,.is-map-fullscreen .network-viewport,.is-map-fullscreen .excalidraw-viewport{height:calc(100dvh - 120px);max-height:none;min-height:0}
+:fullscreen .network-inspector,:fullscreen .network-help,:fullscreen .network-jumps,:fullscreen .structure-map-caption,.is-map-fullscreen .network-inspector,.is-map-fullscreen .network-help,.is-map-fullscreen .network-jumps,.is-map-fullscreen .structure-map-caption{display:none}
+@media(max-width:760px){:fullscreen .network-viewport,.is-map-fullscreen .network-viewport{height:calc(100dvh - 190px)}}
+.excalidraw-panel{border-top:1px solid var(--line);padding:25px 0;margin:30px 0}.excalidraw-panel h2{font-size:25px}.excalidraw-panel header p{font-size:15px}.drawing-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.drawing-controls button,.drawing-controls>a{font-size:14px;padding:8px 12px;border:1px solid var(--line)}.drawing-controls output{font:14px var(--mono);min-width:50px;text-align:center}.excalidraw-viewport{position:relative;height:620px;max-height:75svh;min-height:380px;overflow:clip;touch-action:none;cursor:grab;user-select:none;background:white;border:1px solid var(--line)}.excalidraw-stage{position:absolute;inset:0}.excalidraw-svg{position:absolute;top:0;left:0;max-width:none}.drawing-references{margin:20px 0}.drawing-references summary{font-size:16px;cursor:pointer}.drawing-references>div{display:grid;gap:10px;padding-top:15px}.drawing-references a,.drawing-references span{font-size:14px;overflow-wrap:anywhere}.drawing-references small{color:var(--muted);font-size:14px}.drawing-source{font-size:14px;overflow-wrap:anywhere}.drawing-error{color:var(--accent);font-size:15px}.excalidraw-panel:fullscreen header,.excalidraw-panel:fullscreen .drawing-references,.excalidraw-panel:fullscreen .drawing-source,.excalidraw-panel.is-map-fullscreen header,.excalidraw-panel.is-map-fullscreen .drawing-references,.excalidraw-panel.is-map-fullscreen .drawing-source{display:none}.excalidraw-panel:fullscreen,.excalidraw-panel.is-map-fullscreen{margin:0}
+
+/* Source material remains readable inside the entry, with its provenance path. */
+.note-resources figure{margin:20px 0}.note-resources img{display:block;max-width:100%;height:auto;border:1px solid var(--line)}
+.entry-drawing-links{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.entry-drawing-links a{font-size:16px}
+.material-path{line-height:1.9;padding:12px 0;border-bottom:1px solid var(--line)}.related-materials{margin-top:36px}.excalidraw-panel{scroll-margin-top:100px}
