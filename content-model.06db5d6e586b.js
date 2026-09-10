@@ -8,6 +8,11 @@ export function contentModel(snapshot){
  const narrative=entries.find(n=>n.name==='叙事 narrative');
  const namedParts=new Set(entries.filter(n=>['叙事结构 narrative structure','叙事内容 narrative content'].includes(n.name)).map(n=>n.id));
  if(narrative)narrative.links=narrative.links.map(e=>e.type==='related'&&namedParts.has(e.target)?{...e,type:'including',sourceType:'related',origin:'author-clarification'}:e);
+ // Case interpretation grounded in the author's Zora example, not an imported PKM edge.
+ const mismatch=entries.find(n=>n.name==='objective reason - 不匹配 unmatch'),size=entries.find(n=>n.name==='aesthetics - visual - 大小 size'),zora=entries.find(n=>n.name==='character - 卓拉 zora');
+ if(mismatch&&size&&zora){
+  for(const [from,to,type] of [[mismatch,size,'achieved with'],[size,zora,'have example']])if(!from.links.some(e=>e.target===to.id&&e.type===type))from.links.push({target:to.id,type,origin:'case-interpretation',evidence:zora.id});
+ }
  return {...snapshot,entries};
 }
 export const hierarchyTypes=['supported by','achieved with','including','consist of','have example'];

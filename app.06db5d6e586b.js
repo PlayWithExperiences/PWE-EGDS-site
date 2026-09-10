@@ -1,10 +1,10 @@
-import {drawingPanels,bindDrawings} from './drawing-viewer.daefac7c5923.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.daefac7c5923.js';
-import {mountStructureMap} from './structure-map.daefac7c5923.js';
-import {valenceOf,displayTitle} from './feeling-groups.daefac7c5923.js';
-import {mountNetwork,graphData} from './network.daefac7c5923.js';
-import { marked } from './vendor/marked.daefac7c5923.js';
-import { text } from './copy.daefac7c5923.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.06db5d6e586b.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.06db5d6e586b.js';
+import {mountStructureMap} from './structure-map.06db5d6e586b.js';
+import {valenceOf,displayTitle} from './feeling-groups.06db5d6e586b.js';
+import {mountNetwork,graphData} from './network.06db5d6e586b.js';
+import { marked } from './vendor/marked.06db5d6e586b.js';
+import { text } from './copy.06db5d6e586b.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -135,7 +135,7 @@ function markdown(body){
  return template.innerHTML;
 }
 function edgeLabel(s){return ({including:t().includes,'consist of':t().includes,'have example':t().examples,related:t().related})[s]||s.replace(/^./,c=>c.toUpperCase());}
-function relationList(edges){if(!edges.length)return `<p class="muted">${t().noEdges}</p>`;const grouped=Map.groupBy?Map.groupBy(edges,e=>e.type):edges.reduce((m,e)=>(m.has(e.type)?m.get(e.type).push(e):m.set(e.type,[e]),m),new Map());return [...grouped].map(([type,list])=>`<div class="relation-group"><h3>${esc(edgeLabel(type))}</h3><div>${list.map(e=>{const n=nodes.get(e.target);return n?link(href(n.id),`${esc(title(n))}${e.origin==='author-clarification'?`<small>${lang==='zh'?'作者补充':'Author clarification'}</small>`:''}<span>↗</span>`):''}).join('')}</div></div>`).join('');}
+function relationList(edges){if(!edges.length)return `<p class="muted">${t().noEdges}</p>`;const grouped=Map.groupBy?Map.groupBy(edges,e=>e.type):edges.reduce((m,e)=>(m.has(e.type)?m.get(e.type).push(e):m.set(e.type,[e]),m),new Map());return [...grouped].map(([type,list])=>`<div class="relation-group"><h3>${esc(edgeLabel(type))}</h3><div>${list.map(e=>{const n=nodes.get(e.target);return n?link(href(n.id),`${esc(title(n))}${e.origin==='author-clarification'?`<small>${lang==='zh'?'作者补充':'Author clarification'}</small>`:e.origin==='case-interpretation'?`<small>${lang==='zh'?'案例解读':'Case interpretation'}</small>`:''}<span>↗</span>`):''}).join('')}</div></div>`).join('');}
 function entry(id){
  if(id.startsWith('form-')&&/^form-[0-3]$/.test(id))return formPage(Number(id.at(-1)));
  const n=nodes.get(id);if(!n)return notFound();
@@ -183,7 +183,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.daefac7c5923.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.06db5d6e586b.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();

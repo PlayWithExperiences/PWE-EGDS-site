@@ -1,5 +1,5 @@
-import {mapFullscreen} from './map-fullscreen.daefac7c5923.js';
-import {mapCamera} from './map-camera.daefac7c5923.js';
+import {mapFullscreen} from './map-fullscreen.06db5d6e586b.js';
+import {mapCamera} from './map-camera.06db5d6e586b.js';
 export function mountStructureMap(host,{lang='zh',onOpen=()=>{}}={}){
  const zh=lang==='zh';
  const labels=[['体验形态','Experience form'],['主观感受','Subjective feelings'],['感受诱因','Eliciting factors'],['设计杠杆','Design levers']];
