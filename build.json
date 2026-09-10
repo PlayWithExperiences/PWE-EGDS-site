@@ -1,0 +1,25 @@
+{
+  "revision": "e3663245543d",
+  "assetPaths": {
+    "app.js": "app.e3663245543d.js",
+    "content-model.js": "content-model.e3663245543d.js",
+    "copy.js": "copy.e3663245543d.js",
+    "data/catalog.json": "data/catalog.e3663245543d.json",
+    "drawing-viewer.js": "drawing-viewer.e3663245543d.js",
+    "drawings/d-49192b528816.excalidraw": "drawings/d-49192b528816.e3663245543d.excalidraw",
+    "drawings/d-49192b528816.svg": "drawings/d-49192b528816.e3663245543d.svg",
+    "drawings/d-d23b3335b7c9.excalidraw": "drawings/d-d23b3335b7c9.e3663245543d.excalidraw",
+    "drawings/d-d23b3335b7c9.svg": "drawings/d-d23b3335b7c9.e3663245543d.svg",
+    "favicon.svg": "favicon.e3663245543d.svg",
+    "feeling-groups.js": "feeling-groups.e3663245543d.js",
+    "index.html": "index.html",
+    "map-camera.js": "map-camera.e3663245543d.js",
+    "map-fullscreen.js": "map-fullscreen.e3663245543d.js",
+    "network.js": "network.e3663245543d.js",
+    "structure-map.js": "structure-map.e3663245543d.js",
+    "styles.css": "styles.e3663245543d.css",
+    "theme-init.js": "theme-init.e3663245543d.js",
+    "vendor/marked.js": "vendor/marked.e3663245543d.js",
+    "vendor/marked.LICENSE.md": "vendor/marked.LICENSE.md"
+  }
+}
