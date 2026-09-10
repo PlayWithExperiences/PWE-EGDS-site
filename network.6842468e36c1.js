@@ -1,8 +1,8 @@
-import {drawingPanels,bindDrawings} from './drawing-viewer.06db5d6e586b.js';
-import {mapFullscreen} from './map-fullscreen.06db5d6e586b.js';
-import {relationName,hierarchyTypes} from './content-model.06db5d6e586b.js';
-import {mapCamera} from './map-camera.06db5d6e586b.js';
-import {valenceOf,displayTitle} from './feeling-groups.06db5d6e586b.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.6842468e36c1.js';
+import {mapFullscreen} from './map-fullscreen.6842468e36c1.js';
+import {relationName,hierarchyTypes} from './content-model.6842468e36c1.js';
+import {mapCamera} from './map-camera.6842468e36c1.js';
+import {valenceOf,displayTitle} from './feeling-groups.6842468e36c1.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all'){
@@ -11,8 +11,9 @@ export function graphData(catalog, selected='', scope='all'){
  const edges=all.flatMap(n=>n.links.filter(e=>ids.has(e.target)).map(e=>({from:n.id,to:e.target,type:e.type,origin:e.origin||'note'})));
  let visible=ids,pool=all,shownEdges=edges;
  if(scope==='focus'&&catalog.entries.some(n=>n.id===selected)){
-  visible=new Set([selected]);for(const e of edges)if(e.from===selected||e.to===selected){visible.add(e.from);visible.add(e.to)}
+  visible=new Set([selected]);for(const n of catalog.entries)for(const e of n.links)if((n.id===selected||e.target===selected)&&!Object.values(catalog.hubs).includes(n.id)&&!Object.values(catalog.hubs).includes(e.target)){visible.add(n.id);visible.add(e.target)}
   const byId=new Map(catalog.entries.map(n=>[n.id,n]));
+  if(byId.get(selected)?.category==='references'){let targets=new Set([selected]);for(let step=0;step<2;step++){const next=new Set();for(const n of all)if(n.links.some(e=>targets.has(e.target))){visible.add(n.id);next.add(n.id);}targets=next;}}
   // Follow the selected entry's outgoing explanation/material chain, not peers' neighborhoods.
   let frontier=[selected];
   for(let step=0;step<2;step++){
@@ -92,7 +93,7 @@ function lines(text,limit=104,font=14){
  for(const c of text){const cw=c.charCodeAt(0)>255?font:font/2;if(width+cw>limit){out.push(line);line='';width=0;}line+=c;width+=cw;}if(line)out.push(line);
  return out.length>2?[out[0],out[1].slice(0,-1)+'…']:out;
 }
-export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onChange=()=>{}}={}){
+export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onChange=()=>{},renderBody=()=>''}={}){
  const zh=lang==='zh',allMap=new Map(catalog.entries.map(n=>[n.id,n]));
  const valid=new Set(catalog.entries.map(n=>n.id));
  let scale=1,current=valid.has(selected)?selected:scope==='focus'?catalog.entries.find(n=>n.name==='subjective feeling - 探索 exploration')?.id:'',mode=scope==='focus'?'focus':'all';
@@ -101,6 +102,9 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
  const layerLabel={feelings:zh?'02 主观感受':'02 Subjective feelings',factors:zh?'03 感受诱因':'03 Eliciting factors',levers:zh?'04 设计杠杆':'04 Design levers',references:zh?'案例与素材 · 不属于认知层级':'Examples & sources · outside the cognitive layers'};
  host.innerHTML=`<div class="network-toolbar"><div class="network-modes"><button data-mode="focus">${zh?'选中节点的关系':'Selected neighborhood'}</button><button data-mode="all">${zh?'全部关系':'All relationships'}</button></div><div class="network-zoom"><button data-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output>100%</output><button data-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-zoom="reset">100%</button><button data-zoom="fit">${zh?'全图':'Fit graph'}</button></div></div><p class="network-help">${zh?'拖拽平移，滚轮缩放；点选词条聚拢关联内容，同类保持同层，点击空白返回全图。感受按倾向分区，连线依据笔记与作者补充。':'Drag to pan, scroll to zoom. Select a node to gather its connections while retaining their layers; click blank space to return to the full map.'}</p><div class="network-jumps">${['feelings','factors','levers'].map(k=>`<button data-jump="${k}">${layerLabel[k]} ↓</button>`).join('')}</div><div class="network-materials"></div><div class="network-viewport" tabindex="0" aria-label="${zh?'可拖拽缩放的关系地图':'Pannable and zoomable relationship map'}"><div class="network-space"><svg class="network-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${zh?'体验形态、主观感受、感受诱因、设计杠杆':'Experience forms, feelings, factors, and design levers'}"></svg></div></div><div class="network-status" role="status"></div><section class="network-inspector" aria-live="polite"></section>`;
  const viewport=host.querySelector('.network-viewport'),svg=host.querySelector('svg'),space=host.querySelector('.network-space');let layout,data,camera;
+ const workspace=document.createElement('div');workspace.className='network-workspace';viewport.before(workspace);workspace.append(viewport);
+ const panel=document.createElement('aside');panel.className='network-detail-panel';panel.setAttribute('aria-label',zh?'选中词条的内容':'Selected entry content');panel.tabIndex=0;
+ const inspector=host.querySelector('.network-inspector'),materials=host.querySelector('.network-materials');panel.append(inspector,materials);workspace.append(panel);
  function zoom(){if(!camera){camera=mapCamera(viewport,svg,{width:layout.width,height:layout.height,onZoom:value=>{scale=value;host.querySelector('output').textContent=Math.round(value*100)+'%';}});camera.center(layout.width/2,viewport.clientHeight/2,1);}else{camera.setSize(layout.width,layout.height);camera.apply();}}
  function draw(){
   data=graphData(catalog,current,mode);layout=mode==='focus'?focusLayout(data,current):graphLayout(data);const map=new Map(layout.nodes.map(n=>[n.id,n]));const connected=new Set(current?[current]:[]);for(const e of data.edges)if(e.from===current||e.to===current){connected.add(e.from);connected.add(e.to);}
@@ -127,8 +131,10 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
   host.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
   host.querySelector('.network-status').textContent=zh?`当前 ${data.nodes.length} / ${data.total} 个词条（含关联素材），${data.edges.length} 条关系。${mode==='focus'?'关联内容已聚拢，保留所属层级。':''}`:`${data.nodes.length} / ${data.total} entries including connected sources; ${data.edges.length} recorded links.${mode==='focus'?' Connections gathered within their original layers.':''}`;
   const n=allMap.get(current);const edges=n?data.edges.filter(e=>e.from===current||e.to===current):[];
-  renderMaterials(host.querySelector('.network-materials'),catalog,n,data,lang);
-  host.querySelector('.network-inspector').innerHTML=n?`<div><span>${zh?'已选择':'Selected'} · ${layerLabel[n.category]||''}</span><h2>${escape(label(n))}</h2><a href="#/entry/${n.id}">${zh?'阅读词条':'Read entry'} →</a></div><div class="network-relations">${edges.length?relationGroups(edges,current,allMap,label,zh):`<p>${zh?'当前范围内尚无已记录连线。':'No recorded connections in this view.'}</p>`}</div>`:`<p>${zh?'选择一个词条，查看它的分组关系。':'Select an entry to inspect its grouped relationships.'}</p>`;
+  workspace.classList.toggle('has-selection',Boolean(n));panel.hidden=!n;panel.querySelector(':scope > .network-relations')?.remove();
+  renderMaterials(materials,catalog,n,data,lang);
+  host.querySelector('.network-inspector').innerHTML=n?`<div><span>${zh?'已选择':'Selected'} · ${layerLabel[n.category]||''}</span><h2>${escape(label(n))}</h2><a href="#/entry/${n.id}">${zh?'阅读词条':'Read entry'} →</a>${n.body?`<div class="prose selected-entry-body">${renderBody(n.body)}</div>`:''}</div><div class="network-relations">${edges.length?relationGroups(edges,current,allMap,label,zh):`<p>${zh?'当前范围内尚无已记录连线。':'No recorded connections in this view.'}</p>`}</div>`:`<p>${zh?'选择一个词条，查看它的分组关系。':'Select an entry to inspect its grouped relationships.'}</p>`;
+  const relations=inspector.querySelector('.network-relations');if(relations)panel.append(relations);panel.scrollTop=0;camera.setSize(layout.width,layout.height);if(mode==='focus')camera.fit();
  }
  function select(id){current=id;mode='focus';draw();svg.querySelector(`[data-node="${id}"]`)?.focus({preventScroll:true});viewport.scrollIntoView({block:'nearest',behavior:'instant'});onChange({selected:current,scope:mode});}
  function reset(){current='';mode='all';draw();camera.fit();onChange({selected:'',scope:'all'});}
@@ -157,10 +163,13 @@ function relationGroups(edges,current,allMap,label,zh){
 
 function renderMaterials(host,catalog,selected,data,lang){
  if(!selected){host.innerHTML='';return;}
- const zh=lang==='zh',materials=data.nodes.filter(n=>n.resources?.length),owners=catalog.entries.filter(n=>(n.drawings||[]).some(d=>n.id===selected.id||d.references.some(r=>r.target===selected.id)));
+ const zh=lang==='zh',materials=selected.resources?.length?[selected]:data.nodes.filter(n=>n.resources?.length),owners=catalog.entries.filter(n=>(n.drawings||[]).some(d=>n.id===selected.id||d.references.some(r=>r.target===selected.id)));
  const count=materials.reduce((sum,n)=>sum+n.resources.length,0);
  const interpretation=data.edges.some(e=>e.origin==='case-interpretation');
- host.innerHTML=`${interpretation?`<p class="case-reading">${zh?'案例解读（虚线）：通过角色与武器的大小对比，产生“不匹配”的感受诱因，以突出年轻。依据卓拉原图及作者说明；这两条虚线不是 PKM 原有连线。':'Case interpretation (dashed): contrasting the sizes of the character and weapon creates a mismatch that emphasizes youth. Based on the Zora source image and the author’s explanation; these two edges are not imported PKM links.'}</p>`:''}${count||owners.length?`<details class="network-source-details"><summary>${escape(displayTitle(selected,lang))} · ${zh?'查看素材与原始画布':'View material & original drawings'} <strong>${count} ${zh?'素材':'sources'} · ${owners.reduce((sum,n)=>sum+n.drawings.length,0)} Excalidraw</strong></summary><div class="network-source-content">${materials.map(n=>`<section><h3><a href="#/entry/${n.id}">${escape(displayTitle(n,lang))} →</a></h3>${n.resources.map(r=>r.kind==='image'?`<figure><img data-source-image="${escape(r.url)}" alt="${escape(displayTitle(n,lang))}" loading="lazy"><figcaption><a href="${escape(r.url)}" target="_blank" rel="noopener noreferrer">${zh?'原始图片':'Source image'} ↗</a></figcaption></figure>`:`<p><a href="${escape(r.url)}" target="_blank" rel="noopener noreferrer">${escape(r.label)} ↗</a></p>`).join('')}</section>`).join('')}${owners.map(n=>drawingPanels(n,lang)).join('')}</div></details>`:`<p>${zh?'当前关联范围内尚无图片或已收录的 Excalidraw。':'No images or imported Excalidraw drawings in this neighborhood.'}</p>`}`;
- const details=host.querySelector('details');if(details)details.addEventListener('toggle',()=>{if(details.open){for(const img of host.querySelectorAll('[data-source-image]'))if(!img.src)img.src=img.dataset.sourceImage;}});
+ host.innerHTML=`${interpretation?`<p class="case-reading">${zh?'案例解读（虚线）：通过角色与武器的大小对比，产生“不匹配”的感受诱因，以突出年轻。依据卓拉原图及作者说明；这两条虚线不是 PKM 原有连线。':'Case interpretation (dashed): contrasting the sizes of the character and weapon creates a mismatch that emphasizes youth. Based on the Zora source image and the author’s explanation; these two edges are not imported PKM links.'}</p>`:''}${count||owners.length?`<section class="network-source-details"><h3 class="source-heading">${zh?'素材与画布':'Material & drawings'} <strong>${count} ${zh?'素材':'sources'} · ${owners.reduce((sum,n)=>sum+n.drawings.length,0)} Excalidraw</strong></h3><div class="network-source-content">${materials.map(n=>`<section><h3>${n.id===selected.id?'':`<button data-select="${n.id}">${escape(displayTitle(n,lang))} →</button>`}</h3>${n.resources.map(r=>r.kind==='image'?`<figure><img data-source-image="${escape(r.url)}" alt="${escape(displayTitle(n,lang))}" loading="lazy"><figcaption><a href="${escape(r.url)}" target="_blank" rel="noopener noreferrer">${zh?'原始图片':'Source image'} ↗</a></figcaption></figure>`:`<p><a href="${escape(r.url)}" target="_blank" rel="noopener noreferrer">${escape(r.label)} ↗</a></p>`).join('')}</section>`).join('')}${owners.length?`<details class="original-drawing-reference"><summary>${zh?'查看原始画布':'View original drawings'} · Excalidraw</summary>${owners.map(n=>drawingPanels(n,lang)).join('')}</details>`:''}</div></section>`:`<p>${zh?'当前关联范围内尚无图片或已收录的 Excalidraw。':'No images or imported Excalidraw drawings in this neighborhood.'}</p>`}`;
+ if(selected.resources?.length&&!owners.length)host.querySelector('.source-heading')?.remove();
+ const explanation=host.querySelector('.case-reading');if(explanation)host.append(explanation);
+ for(const img of host.querySelectorAll('[data-source-image]')){img.src=img.dataset.sourceImage;img.tabIndex=0;img.setAttribute('role','button');img.setAttribute('aria-label',(zh?'放大图片：':'Enlarge image: ')+img.alt);const open=()=>{const dialog=document.createElement('dialog');dialog.className='material-image-dialog';dialog.setAttribute('aria-label',img.alt);dialog.innerHTML=`<div class="material-image-controls"><button data-size>${zh?'原始尺寸':'Original size'}</button><button data-close>${zh?'关闭':'Close'} ×</button></div><div class="material-image-scroll"><img src="${escape(img.src)}" alt="${escape(img.alt)}"></div>`;host.append(dialog);dialog.querySelector('[data-close]').onclick=()=>dialog.close();dialog.querySelector('[data-size]').onclick=()=>{const large=dialog.querySelector('img');large.style.width=large.style.width?'':img.naturalWidth+'px';};dialog.addEventListener('close',()=>dialog.remove());dialog.showModal();};img.onclick=open;img.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};}
+
  for(const owner of owners)bindDrawings(owner,lang);
 }
