@@ -1,10 +1,10 @@
-import {drawingPanels,bindDrawings} from './drawing-viewer.e3663245543d.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.e3663245543d.js';
-import {mountStructureMap} from './structure-map.e3663245543d.js';
-import {valenceOf,displayTitle} from './feeling-groups.e3663245543d.js';
-import {mountNetwork,graphData} from './network.e3663245543d.js';
-import { marked } from './vendor/marked.e3663245543d.js';
-import { text } from './copy.e3663245543d.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.89300665c2d7.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.89300665c2d7.js';
+import {mountStructureMap} from './structure-map.89300665c2d7.js';
+import {valenceOf,displayTitle} from './feeling-groups.89300665c2d7.js';
+import {mountNetwork,graphData} from './network.89300665c2d7.js';
+import { marked } from './vendor/marked.89300665c2d7.js';
+import { text } from './copy.89300665c2d7.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -46,7 +46,7 @@ function scaleGraphic(i){
  return `<svg class="scale-graphic" viewBox="0 0 400 110" role="img" aria-label="${esc(t().forms[i][0]+': '+t().forms[i][2])}"><path d="${curvePath}" fill="none" stroke="currentColor" opacity=".18" stroke-width="2"/>${i<3?`<svg x="${x}" y="0" width="${width}" height="110" viewBox="${x} 0 ${width} 110" overflow="hidden"><path d="${curvePath}" fill="none" stroke="currentColor" stroke-width="3"/></svg><path d="M${x} 83v9h${width}v-9" fill="none" stroke="currentColor" stroke-width="1.5"/>`:'<circle cx="270" cy="35" r="6" fill="currentColor"/><path d="M270 47v45" stroke="currentColor" stroke-dasharray="3 4"/>'}</svg>`;
 }
 function formsMarkup(){return `<ol class="scale-list">${t().forms.map((f,i)=>`<li data-form="${i}">${link(href('form-'+i),`<span class="scale-number">${i+1}</span><div><h3>${f[0]}</h3><span class="small-en">${f[1]}</span><p>${f[2]}</p></div>${scaleGraphic(i)}<span class="scale-open" aria-hidden="true">↗</span>`,'scale-row')}</li>`).join('')}</ol>`;}
-function caseContent(c){return `<blockquote class="case-question">${c.question}</blockquote><ol class="case-steps">${c.steps.map((step,i)=>`<li><span>0${i+1} / ${t().stageNames[i]}</span><p>${step}</p></li>`).join('')}</ol><div class="prose">${c.paragraphs.map(p=>`<p>${p}</p>`).join('')}</div><div class="entry-relations"><h3>${t().relatedConcepts}</h3>${relationList(c.names.map(name=>({target:names.get(name)?.id,type:'related'})).filter(e=>e.target))}</div><div class="case-source">${external(c.link,lang==='zh'?'原文与资料':'Original article & material')}</div>`;}
+function caseContent(c){return `<blockquote class="case-question">${c.question}</blockquote><ol class="case-steps">${c.steps.map((step,i)=>`<li><span>0${i+1} / ${t().stageNames[i]}</span><p>${step}</p></li>`).join('')}</ol><div class="prose">${c.paragraphs.map(p=>`<p>${p}</p>`).join('')}</div><div class="entry-relations"><h3>${t().relatedConcepts}</h3>${relationList(c.names.map(name=>({target:names.get(name)?.id,type:'related'})).filter(e=>e.target))}</div>${c.id==='exploration'?drawingLinks(names.get('subjective feeling - 探索 exploration')):''}<div class="case-source">${external(c.link,lang==='zh'?'原文与资料':'Original article & material')}</div>`;}
 function casesMarkup(){return t().cases.map(c=>`<details class="inline-case" id="case-${c.id}"><summary><span class="eyebrow">${c.tag}</span><h3>${c.title}</h3><p>${c.description}</p><span class="text-link">${lang==='zh'?'展开阅读':'Read here'} ↓</span></summary><div class="inline-case-body">${caseContent(c)}</div></details>`).join('');}
 function balancedCopy(value){if(value.length<24)return esc(value);if(lang==='en'){const words=value.split(' ');const count=words.slice(-3).join(' ').length<=30?3:2;return esc(words.slice(0,-count).join(' '))+' '+`<span class="copy-tail">${esc(words.slice(-count).join(' '))}</span>`;}return esc(value.slice(0,-8))+`<span class="copy-tail">${esc(value.slice(-8))}</span>`;}
 function landing(){return `<nav class="overview-toc wrap" aria-label="${lang==='zh'?'总览目录':'Overview contents'}">${link('#/',lang==='zh'?'↑ 页首':'↑ Top','toc-top')}${['why','system','cases','about'].map((x,i)=>link('#/'+x,lang==='zh'?t().nav[[0,1,3,4][i]]:['Why','System','Practice','About'][i])).join('')}</nav>
@@ -135,17 +135,28 @@ function markdown(body){
  return template.innerHTML;
 }
 function edgeLabel(s){return ({including:t().includes,'consist of':t().includes,'have example':t().examples,related:t().related})[s]||s.replace(/^./,c=>c.toUpperCase());}
-function relationList(edges){if(!edges.length)return `<p class="muted">${t().noEdges}</p>`;const grouped=Map.groupBy?Map.groupBy(edges,e=>e.type):edges.reduce((m,e)=>(m.has(e.type)?m.get(e.type).push(e):m.set(e.type,[e]),m),new Map());return [...grouped].map(([type,list])=>`<div class="relation-group"><h3>${esc(edgeLabel(type))}</h3><div>${list.map(e=>{const n=nodes.get(e.target);return n?link(href(n.id),`${esc(title(n))}${e.origin==='author-clarification'?`<small>${lang==='zh'?'作者补充':'Author clarification'}</small>`:''}<span>↗</span>`):''}).join('')}</div></div>`).join('');}
+function relationList(edges){if(!edges.length)return `<p class="muted">${t().noEdges}</p>`;const grouped=Map.groupBy?Map.groupBy(edges,e=>e.type):edges.reduce((m,e)=>(m.has(e.type)?m.get(e.type).push(e):m.set(e.type,[e]),m),new Map());return [...grouped].map(([type,list])=>`<div class="relation-group"><h3>${esc(edgeLabel(type))}</h3><div>${list.map(e=>{const n=nodes.get(e.target);return n?link(href(n.id),`${esc(title(n))}${e.origin==='author-clarification'?`<small>${lang==='zh'?'作者补充':'Author clarification'}</small>`:e.origin==='case-interpretation'?`<small>${lang==='zh'?'案例解读':'Case interpretation'}</small>`:''}<span>↗</span>`):''}).join('')}</div></div>`).join('');}
 function entry(id){
  if(id.startsWith('form-')&&/^form-[0-3]$/.test(id))return formPage(Number(id.at(-1)));
  const n=nodes.get(id);if(!n)return notFound();
  const incoming=backlinks.get(id)||[];const parent=incoming.find(e=>['including','consist of'].includes(e.type));
- return `<div class="wrap entry-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:n.category}),categoryName(n.category))}${parent?`<span>/</span>${link(href(parent.target),esc(title(nodes.get(parent.target))))}`:''}</div><header class="entry-heading"><span class="eyebrow">${categoryName(n.category)} / ${statusLabel(n)}</span><h1>${esc(title(n))}</h1><p>${esc(lang==='zh'?n.title.en:n.title.zh)}</p></header><div class="entry-layout"><article><div class="editor-note">${t().inherited}${n.category==='factors'?' '+t().oldTerm:''}</div><h2 class="eyebrow">${t().bodyTitle}</h2><div class="prose">${n.body?markdown(n.body):n.drawings?.length?'':`<p class="index-notice">${t().emptyBody}</p>`}</div>${drawingPanels(n,lang)}${resourceMarkup(n)}${["gameplay","narrative","aesthetics"].some(k=>catalog.hubs[k]===n.id)?`<div class="hub-branch-link">${link(atlasURL({cat:"levers",branch:n.id}),t().branch+" ↗","primary")}</div>`:""}<div class="entry-relations"><h2>${t().relations} <small>${n.links.length}</small></h2>${relationList(n.links)}</div><div class="source-box"><h2 class="eyebrow">${t().source}</h2><p>${t().sourceText}</p><code>${esc(n.source.path)}</code><span class="source-fingerprint">SHA-256 · ${n.source.sha256.slice(0,16)}… / ${catalog.snapshotDate}</span>${external('https://play-with-experiences-digital-garden.vercel.app/',t().garden)}</div></article><aside class="entry-aside"><h2>${t().backlinks} <small>${incoming.length}</small></h2>${relationList(incoming)}${link(atlasURL({cat:n.category}),t().backAtlas+' ↗','text-link')}</aside></div></div>`;
+ return `<div class="wrap entry-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:n.category}),categoryName(n.category))}${parent?`<span>/</span>${link(href(parent.target),esc(title(nodes.get(parent.target))))}`:''}</div><header class="entry-heading"><span class="eyebrow">${categoryName(n.category)} / ${statusLabel(n)}</span><h1>${esc(title(n))}</h1><p>${esc(lang==='zh'?n.title.en:n.title.zh)}</p>${drawingLinks(n)}</header><div class="entry-layout"><article><div class="editor-note">${t().inherited}${n.category==='factors'?' '+t().oldTerm:''}</div><h2 class="eyebrow">${t().bodyTitle}</h2><div class="prose">${n.body?markdown(n.body):n.drawings?.length?'':`<p class="index-notice">${t().emptyBody}</p>`}</div>${drawingPanels(n,lang)}${resourceMarkup(n)}${relatedMaterials(n)}${["gameplay","narrative","aesthetics"].some(k=>catalog.hubs[k]===n.id)?`<div class="hub-branch-link">${link(atlasURL({cat:"levers",branch:n.id}),t().branch+" ↗","primary")}</div>`:""}<div class="entry-relations"><h2>${t().relations} <small>${n.links.length}</small></h2>${relationList(n.links)}</div><div class="source-box"><h2 class="eyebrow">${t().source}</h2><p>${t().sourceText}</p><code>${esc(n.source.path)}</code><span class="source-fingerprint">SHA-256 · ${n.source.sha256.slice(0,16)}… / ${catalog.snapshotDate}</span>${external('https://play-with-experiences-digital-garden.vercel.app/',t().garden)}</div></article><aside class="entry-aside"><h2>${t().backlinks} <small>${incoming.length}</small></h2>${relationList(incoming)}${link(atlasURL({cat:n.category}),t().backAtlas+' ↗','text-link')}</aside></div></div>`;
+}
+function drawingLinks(n){
+ const owners=catalog.entries.filter(owner=>(owner.drawings||[]).some(d=>owner.id===n.id||d.references.some(r=>r.target===n.id)));
+ return owners.length?`<div class="entry-drawing-links">${owners.map(owner=>link(href(owner.id)+'?drawing=1',`Excalidraw · ${esc(title(owner))} →`,'primary')).join('')}</div>`:'';
+}
+function relatedMaterials(n){
+ const seen=new Set([n.id]),found=[];let frontier=[{node:n,path:[n]}];
+ for(let depth=0;depth<2;depth++){
+  const next=[];for(const item of frontier)for(const e of item.node.links){const target=nodes.get(e.target);if(!target||seen.has(target.id))continue;seen.add(target.id);const path=[...item.path,target];if(target.resources?.length)found.push({node:target,path});next.push({node:target,path});}frontier=next;
+ }
+ return found.length?`<section class="related-materials"><h2>${lang==='zh'?'关联笔记中的素材':'Material in connected notes'}</h2>${found.map(item=>`<div class="material-path">${item.path.map(x=>link(href(x.id),esc(title(x)))).join(' → ')}</div>${resourceMarkup(item.node)}`).join('')}</section>`:'';
 }
 function resourceMarkup(n){
  if(!n.resources?.length)return '';
  const label=lang==='zh'?'原笔记中的素材与链接':'Media & links from the source';
- return `<div class="note-resources"><h2>${label}</h2><p>${lang==='zh'?'按需打开原始素材；外部内容由原站提供。':'Open original material on demand. External content is hosted by its source.'}</p>${n.resources.map((r,i)=>external(r.url,`${String(i+1).padStart(2,'0')} / ${r.label==='Video'?(lang==='zh'?'视频片段':'Video excerpt'):r.label==='Image'?(lang==='zh'?'原始图片':'Source image'):r.label}`)).join('')}</div>`;
+ return `<div class="note-resources"><h2>${label}</h2>${n.resources.map((r,i)=>r.kind==='image'?`<figure><img src="${esc(r.url)}" alt="${esc(title(n))} · ${lang==='zh'?'原笔记图片':'Source image'}" loading="lazy" referrerpolicy="no-referrer"><figcaption>${external(r.url,lang==='zh'?'查看原始图片 ↗':'Open source image ↗')}</figcaption></figure>`:external(r.url,`${String(i+1).padStart(2,'0')} / ${r.label==='Video'?(lang==='zh'?'视频片段':'Video excerpt'):r.label}`)).join('')}</div>`;
 }
 function formPage(i){return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:'forms'}),categoryName('forms'))}</div><span class="eyebrow">EXPERIENCE FORM / v0.3</span><h1>${t().forms[i][0]}</h1><p class="reading-subtitle">${t().forms[i][1]}</p><div class="form-feature">${scaleGraphic(i)}</div><div class="prose"><p>${t().forms[i][2]}</p><p>${t().formSub}</p><p>${lang==='zh'?'从整条曲线中取出体验段落，再关注其中反复出现的体验循环，最后落到某一个体验瞬间。':'Take a passage from the overall curve, examine recurring loops within it, then focus on a particular moment.'}</p></div><p class="editor-note">${lang==='zh'?'依据 EGDS v0.3 原图与方法论记录整理的网站导读。':'Website reading guide based on the EGDS v0.3 drawing and methodology record.'}</p>${formsMarkup()}<div class="next-layers">${link(href(catalog.hubs.feelings),t().artifactNames[1]+' ↗')}${link(atlasURL({cat:'forms'}),t().formTitle+' →')}</div></div>`;}
 function casePage(id){const c=t().cases.find(c=>c.id===id);if(!c)return notFound();return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/cases',t().caseBack)}</div><span class="eyebrow">${c.tag}</span><h1>${c.title}</h1>${caseContent(c)}</div>`;}
@@ -159,7 +170,7 @@ function render(scroll=true){
  if(landingPaths.includes(path)){
   $('#main').innerHTML=landing();
  }else if(path==='/atlas'){ $('#main').innerHTML=atlas(params);bindAtlas(params); }
- else if(path.startsWith('/entry/')){$('#main').innerHTML=entry(decodeURIComponent(path.slice(7)));const node=nodes.get(decodeURIComponent(path.slice(7)));if(node)bindDrawings(node,lang);}
+ else if(path.startsWith('/entry/')){$('#main').innerHTML=entry(decodeURIComponent(path.slice(7)));const node=nodes.get(decodeURIComponent(path.slice(7)));if(node){bindDrawings(node,lang);if(params.get("drawing")){document.querySelector(".drawing-load")?.click();requestAnimationFrame(()=>document.querySelector(".excalidraw-panel")?.scrollIntoView({block:"start"}));}}}
  else if(path.startsWith('/case/'))$('#main').innerHTML=casePage(path.slice(6));
  else $('#main').innerHTML=notFound();
  $('#main').dataset.route=path;
@@ -172,7 +183,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.e3663245543d.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.89300665c2d7.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
