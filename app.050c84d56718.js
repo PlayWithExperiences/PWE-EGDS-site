@@ -1,11 +1,11 @@
-import {bindImageViewer} from './image-viewer.f09c175b00a6.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.f09c175b00a6.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.f09c175b00a6.js';
-import {mountStructureMap} from './structure-map.f09c175b00a6.js';
-import {valenceOf,displayTitle} from './feeling-groups.f09c175b00a6.js';
-import {mountNetwork,graphData} from './network.f09c175b00a6.js';
-import { marked } from './vendor/marked.f09c175b00a6.js';
-import { text } from './copy.f09c175b00a6.js';
+import {bindImageViewer} from './image-viewer.050c84d56718.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.050c84d56718.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.050c84d56718.js';
+import {mountStructureMap} from './structure-map.050c84d56718.js';
+import {valenceOf,displayTitle} from './feeling-groups.050c84d56718.js';
+import {mountNetwork,graphData} from './network.050c84d56718.js';
+import { marked } from './vendor/marked.050c84d56718.js';
+import { text } from './copy.050c84d56718.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -186,7 +186,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.f09c175b00a6.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.050c84d56718.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
