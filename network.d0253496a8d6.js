@@ -1,10 +1,11 @@
-import {layoutLeverTree} from './lever-tree.050c84d56718.js';
-import {bindImageViewer} from './image-viewer.050c84d56718.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.050c84d56718.js';
-import {mapFullscreen} from './map-fullscreen.050c84d56718.js';
-import {relationName,hierarchyTypes} from './content-model.050c84d56718.js';
-import {mapCamera} from './map-camera.050c84d56718.js';
-import {valenceOf,displayTitle} from './feeling-groups.050c84d56718.js';
+import {focusEdgePath} from './edge-route.d0253496a8d6.js';
+import {layoutLeverTree} from './lever-tree.d0253496a8d6.js';
+import {bindImageViewer} from './image-viewer.d0253496a8d6.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.d0253496a8d6.js';
+import {mapFullscreen} from './map-fullscreen.d0253496a8d6.js';
+import {relationName,hierarchyTypes} from './content-model.d0253496a8d6.js';
+import {mapCamera} from './map-camera.d0253496a8d6.js';
+import {valenceOf,displayTitle} from './feeling-groups.d0253496a8d6.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all',depth=1){
@@ -14,11 +15,20 @@ export function graphData(catalog, selected='', scope='all',depth=1){
  let visible=ids,pool=all,shownEdges=edges;
  if(scope==='focus'&&catalog.entries.some(n=>n.id===selected)){
   visible=new Set([selected]);for(const n of catalog.entries)for(const e of n.links)if((n.id===selected||e.target===selected)){visible.add(n.id);visible.add(e.target)}
-  const byId=new Map(catalog.entries.map(n=>[n.id,n]));
-  // Depth is explicit. A hub never expands implicitly through its own neighborhood.
+  const direct=new Set(visible);const byId=new Map(catalog.entries.map(n=>[n.id,n]));
+  // Follow explanations forward across EGDS stages, never through a category index's children.
+  const stage={feelings:0,factors:1,levers:2,references:3},pathSeen=new Set([selected]);let frontier=[selected];
+  const interpretationTypes=new Set(['support','caused by','driven by','achieved with','supported by','related','have example']);
+  for(let step=0;step<3;step++){const next=[];for(const id of frontier){const n=byId.get(id);for(const e of n.links){const target=byId.get(e.target);if(!target||pathSeen.has(target.id)||!interpretationTypes.has(e.type))continue;
+   const forward=stage[target.category]>stage[n.category],support=n.category==='levers'&&target.category==='levers'&&e.type==='supported by'&&n.branch===target.branch;
+   if(forward||support){visible.add(target.id);pathSeen.add(target.id);next.push(target.id);}
+  }}frontier=next;}
+  // Broader two-hop neighborhoods still require an explicit choice.
   for(let hop=1;hop<Math.min(2,depth);hop++){
-   const frontier=new Set(visible);for(const n of catalog.entries)for(const e of n.links)if(frontier.has(n.id)||frontier.has(e.target)){visible.add(n.id);visible.add(e.target);}
+   const frontier=direct;for(const n of catalog.entries)for(const e of n.links)if(frontier.has(n.id)||frontier.has(e.target)){visible.add(n.id);visible.add(e.target);}
   }
+  // Category hubs are represented by the layer headings, never by peer cards.
+  for(const key of ['forms','feelings','factors','levers'])visible.delete(catalog.hubs[key]);
   pool=catalog.entries.filter(n=>visible.has(n.id));
   shownEdges=pool.flatMap(n=>n.links.filter(e=>visible.has(e.target)).map(e=>({from:n.id,to:e.target,type:e.type,origin:e.origin||'note'})));
  }
@@ -60,22 +70,22 @@ export function graphLayout(data){
  return {nodes:placed,bands,families,width:W,height:y};
 }
 export function focusLayout(data,selected){
- const root=data.nodes.find(n=>n.id===selected);if(!root)return graphLayout(data);
+ const root=data.nodes.find(n=>n.id===selected);
  // Focus changes spacing and scope, never the cognitive layer of an entry.
  const placed=[],bands=[],families=[];let y=200;
  for(const category of ['feelings','factors','levers',...(data.nodes.some(n=>!['feelings','factors','levers'].includes(n.category))?['references']:[])]){
   const ns=data.nodes.filter(n=>category==='references'?!['feelings','factors','levers'].includes(n.category):n.category===category),depths=data.depths||leverDepths(data.nodes,data.edges);
-  if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:24,y:y+56,width:1152});placed.push(...tree.nodes);families.push(...tree.families);const height=Math.max(100,tree.height+64);bands.push({category,groups:[],y,height});y+=height+24;continue;}
+  if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:24,y:y+56,width:1152,centerRoots:true});placed.push(...tree.nodes);families.push(...tree.families);const height=Math.max(100,tree.height+64);bands.push({category,groups:[],y,height});y+=height+24;continue;}
   const ranks=new Map(ns.map(n=>[n.id,category==='levers'?(depths[n.id]||0):0]));
   let rowY=y+60;
   for(const rank of [...new Set(ranks.values())].sort((a,b)=>a-b)){
-   const row=ns.filter(n=>ranks.get(n.id)===rank),active=row.find(n=>n.id===selected);
-   const others=row.filter(n=>n!==active);if(active)others.splice(Math.floor(others.length/2),0,active);
+   const row=ns.filter(n=>ranks.get(n.id)===rank);const preferred=row.some(n=>n.id===selected)?selected:category==='references'?data.edges.find(e=>e.origin==='case-interpretation'&&row.some(n=>n.id===e.to))?.to:selected;const active=row.find(n=>n.id===preferred);
+   const others=row.filter(n=>n!==active);if(active)others.unshift(active);
    const cols=Math.min(5,others.length);
    for(let i=0;i<others.length;i++){
     const line=Math.floor(i/cols),count=Math.min(cols,others.length-line*cols);
-    const start=(W-count*200-(count-1)*24)/2;
-    placed.push({...others[i],x:start+(i%cols)*224,y:rowY+line*66,w:200,h:46});
+    const start=(W-count*200-(count-1)*24)/2;const position=active&&others.length<=5?W/2-100+(i===0?0:(i%2?-1:1)*Math.ceil(i/2)*224):start+(i%cols)*224;
+    placed.push({...others[i],x:position,y:rowY+line*66,w:200,h:46});
    }
    rowY+=Math.ceil(others.length/cols)*66;
   }
@@ -96,7 +106,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
  const label=n=>displayTitle(n,lang);
  const groupLabel={negative:zh?'负向':'Negative',neutral:zh?'中性 / 复合':'Neutral / mixed',positive:zh?'正向':'Positive',all:zh?'感受诱因':'Eliciting factors',gameplay:zh?'玩法与挑战':'Gameplay & challenges',narrative:zh?'叙事':'Narrative',aesthetics:zh?'美学':'Aesthetics'};
  const layerLabel={feelings:zh?'02 主观感受':'02 Subjective feelings',factors:zh?'03 感受诱因':'03 Eliciting factors',levers:zh?'04 设计杠杆':'04 Design levers',references:zh?'案例与素材 · 不属于认知层级':'Examples & sources · outside the cognitive layers'};
- host.innerHTML=`<div class="network-toolbar"><div class="network-modes"><button data-mode="focus">${zh?'选中节点的关系':'Selected neighborhood'}</button><button data-mode="all">${zh?'全部关系':'All relationships'}</button></div><label class="network-depth">${zh?'关联深度':'Link depth'} <select data-depth><option value="1">${zh?'1 · 直接关联':'1 · Direct links'}</option><option value="2">${zh?'2 · 间接关联':'2 · Two hops'}</option></select></label><div class="network-zoom"><button data-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output>100%</output><button data-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-zoom="reset">100%</button><button data-zoom="fit">${zh?'全图':'Fit graph'}</button></div></div><p class="network-help">${zh?'拖拽平移，滚轮缩放；点选词条聚拢关联内容，同类保持同层，点击空白返回全图。感受按倾向分区，连线依据笔记与作者补充。':'Drag to pan, scroll to zoom. Select a node to gather its connections while retaining their layers; click blank space to return to the full map.'}</p><p class="network-hierarchy-key">${zh?'设计杠杆内部：深色箭头标示包含、组成与支撑关系；点选词条查看具体关系。':'Within design levers, stronger arrows show inclusion, composition and support. Select an entry for relationship labels.'}</p><div class="network-jumps">${['feelings','factors','levers'].map(k=>`<button data-jump="${k}">${layerLabel[k]} ↓</button>`).join('')}</div><div class="network-materials"></div><div class="network-viewport" tabindex="0" aria-label="${zh?'可拖拽缩放的关系地图':'Pannable and zoomable relationship map'}"><div class="network-space"><svg class="network-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${zh?'体验形态、主观感受、感受诱因、设计杠杆':'Experience forms, feelings, factors, and design levers'}"></svg></div></div><div class="network-status" role="status"></div><section class="network-inspector" aria-live="polite"></section>`;
+ host.innerHTML=`<div class="network-toolbar"><div class="network-modes"><button data-mode="focus">${zh?'选中节点的关系':'Selected neighborhood'}</button><button data-mode="all">${zh?'全部关系':'All relationships'}</button></div><label class="network-depth">${zh?'关联深度':'Link depth'} <select data-depth><option value="1">${zh?'解释链 · 默认':'Explanation chain'}</option><option value="2">${zh?'扩展 · 两跳关联':'Expand two hops'}</option></select></label><div class="network-zoom"><button data-zoom="out" aria-label="${zh?'缩小':'Zoom out'}">−</button><output>100%</output><button data-zoom="in" aria-label="${zh?'放大':'Zoom in'}">＋</button><button data-zoom="reset">100%</button><button data-zoom="fit">${zh?'全图':'Fit graph'}</button></div></div><p class="network-help">${zh?'拖拽平移，滚轮缩放；点选词条聚拢关联内容，同类保持同层，点击空白返回全图。感受按倾向分区，连线依据笔记与作者补充。':'Drag to pan, scroll to zoom. Select a node to gather its connections while retaining their layers; click blank space to return to the full map.'}</p><p class="network-hierarchy-key">${zh?'设计杠杆内部：深色箭头标示包含、组成与支撑关系；点选词条查看具体关系。':'Within design levers, stronger arrows show inclusion, composition and support. Select an entry for relationship labels.'}</p><div class="network-jumps">${['feelings','factors','levers'].map(k=>`<button data-jump="${k}">${layerLabel[k]} ↓</button>`).join('')}</div><div class="network-materials"></div><div class="network-viewport" tabindex="0" aria-label="${zh?'可拖拽缩放的关系地图':'Pannable and zoomable relationship map'}"><div class="network-space"><svg class="network-svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${zh?'体验形态、主观感受、感受诱因、设计杠杆':'Experience forms, feelings, factors, and design levers'}"></svg></div></div><div class="network-status" role="status"></div><section class="network-inspector" aria-live="polite"></section>`;
  const viewport=host.querySelector('.network-viewport'),svg=host.querySelector('svg'),space=host.querySelector('.network-space');let layout,data,camera;
  const workspace=document.createElement('div');workspace.className='network-workspace';viewport.before(workspace);workspace.append(viewport);
  const panel=document.createElement('aside');panel.className='network-detail-panel';panel.setAttribute('aria-label',zh?'选中词条的内容':'Selected entry content');panel.tabIndex=0;
@@ -120,6 +130,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
     const obstructed=layout.nodes.some(n=>n.id!==a.id&&n.id!==b.id&&n.y>Math.min(a.y,b.y)&&n.y<Math.max(a.y,b.y)&&Math.abs(n.x+n.w/2-ax)<n.w/2+16);
     if(mode==='focus'&&obstructed&&Math.abs(ax-bx)<24){const side=ax+(b.category==='references'?-240:240),sign=down?1:-1;path=`M${ax} ${ay} C${side} ${ay} ${side} ${ay+sign*24} ${side} ${ay+sign*42} L${side} ${by-sign*42} C${side} ${by} ${bx} ${by-sign*24} ${bx} ${by}`;}
 }
+   if(mode==='focus')path=focusEdgePath(a,b,layout.nodes);
    html+=`<path d="${path}" class="network-edge ${hierarchy?'hierarchy-edge':''} ${e.origin==='case-interpretation'?'case-interpretation':''} ${adjacent?'highlight':mode==='all'&&current?'muted-edge':mode==='focus'?'focus-edge':''}" data-from="${e.from}" data-to="${e.to}" data-relation="${escape(e.type)}" ${hierarchy||adjacent||mode==='focus'?'marker-end="url(#recorded-arrow)"':''}><title>${escape(label(a)+' — '+e.type+' → '+label(b)+(e.origin==='case-interpretation'?(zh?'（案例解读）':' (case interpretation)'):''))}</title></path>`;
    if(hierarchy&&mode==='focus'&&(e.type==='supported by'||(adjacent&&data.edges.filter(x=>x.from===e.from&&x.type===e.type).length<=3))){const x=(a.x+a.w/2+b.x+b.w/2)/2+9,y=(a.y+a.h+b.y)/2;html+=`<text class="hierarchy-edge-label" x="${x}" y="${y}">${escape(relationName(e.type,lang))}</text>`;}
   }

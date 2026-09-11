@@ -1,11 +1,11 @@
-import {bindImageViewer} from './image-viewer.050c84d56718.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.050c84d56718.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.050c84d56718.js';
-import {mountStructureMap} from './structure-map.050c84d56718.js';
-import {valenceOf,displayTitle} from './feeling-groups.050c84d56718.js';
-import {mountNetwork,graphData} from './network.050c84d56718.js';
-import { marked } from './vendor/marked.050c84d56718.js';
-import { text } from './copy.050c84d56718.js';
+import {bindImageViewer} from './image-viewer.d0253496a8d6.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.d0253496a8d6.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.d0253496a8d6.js';
+import {mountStructureMap} from './structure-map.d0253496a8d6.js';
+import {valenceOf,displayTitle} from './feeling-groups.d0253496a8d6.js';
+import {mountNetwork,graphData} from './network.d0253496a8d6.js';
+import { marked } from './vendor/marked.d0253496a8d6.js';
+import { text } from './copy.d0253496a8d6.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -140,24 +140,19 @@ function relationList(edges){if(!edges.length)return `<p class="muted">${t().noE
 function entry(id){
  if(id.startsWith('form-')&&/^form-[0-3]$/.test(id))return formPage(Number(id.at(-1)));
  const n=nodes.get(id);if(!n)return notFound();
- const incoming=backlinks.get(id)||[];const parent=incoming.find(e=>['including','consist of'].includes(e.type));
- return `<div class="wrap entry-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:n.category}),categoryName(n.category))}${parent?`<span>/</span>${link(href(parent.target),esc(title(nodes.get(parent.target))))}`:''}</div><header class="entry-heading"><span class="eyebrow">${categoryName(n.category)} / ${statusLabel(n)}</span><h1>${esc(title(n))}</h1><p>${esc(lang==='zh'?n.title.en:n.title.zh)}</p>${drawingLinks(n)}</header><div class="entry-layout"><article><div class="editor-note">${t().inherited}${n.category==='factors'?' '+t().oldTerm:''}</div><h2 class="eyebrow">${t().bodyTitle}</h2><div class="prose">${n.body?markdown(n.body):n.drawings?.length?'':`<p class="index-notice">${t().emptyBody}</p>`}</div>${drawingPanels(n,lang)}${resourceMarkup(n)}${relatedMaterials(n)}${["gameplay","narrative","aesthetics"].some(k=>catalog.hubs[k]===n.id)?`<div class="hub-branch-link">${link(atlasURL({cat:"levers",branch:n.id}),t().branch+" ↗","primary")}</div>`:""}<div class="entry-relations"><h2>${t().relations} <small>${n.links.length}</small></h2>${relationList(n.links)}</div><div class="source-box"><h2 class="eyebrow">${t().source}</h2><p>${t().sourceText}</p><code>${esc(n.source.path)}</code><span class="source-fingerprint">SHA-256 · ${n.source.sha256.slice(0,16)}… / ${catalog.snapshotDate}</span>${external('https://play-with-experiences-digital-garden.vercel.app/',t().garden)}</div></article><aside class="entry-aside"><h2>${t().backlinks} <small>${incoming.length}</small></h2>${relationList(incoming)}${link(atlasURL({cat:n.category}),t().backAtlas+' ↗','text-link')}</aside></div></div>`;
+ const incoming=backlinks.get(id)||[];const parent=incoming.find(e=>['including','consist of'].includes(e.type)&&e.target!==catalog.hubs[n.category]);
+ return `<div class="wrap entry-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:n.category}),categoryName(n.category))}${parent?`<span>/</span>${link(href(parent.target),esc(title(nodes.get(parent.target))))}`:''}<span>/</span><span aria-current="page">${esc(title(n))}</span></div><header class="entry-heading"><span class="eyebrow">${categoryName(n.category)} / ${statusLabel(n)}</span><h1>${esc(title(n))}</h1><p>${esc(lang==='zh'?n.title.en:n.title.zh)}</p>${drawingLinks(n)}</header><div class="entry-layout"><article>${n.body?`<div class="editor-note">${t().inherited}${n.category==='factors'?' '+t().oldTerm:''}</div><h2 class="eyebrow">${t().bodyTitle}</h2>`:''}<div class="prose">${n.body?markdown(n.body):n.drawings?.length?'':`<p class="index-notice">${t().emptyBody}</p>`}</div>${n.drawings?.length?`<details class="entry-original-drawings"><summary>${lang==='zh'?'原始画布':'Original drawings'} · Excalidraw</summary>${drawingPanels(n,lang)}</details>`:''}${entryMaterials(n)}${["gameplay","narrative","aesthetics"].some(k=>catalog.hubs[k]===n.id)?`<div class="hub-branch-link">${link(atlasURL({cat:"levers",branch:n.id}),t().branch+" ↗","primary")}</div>`:""}<div class="entry-relations"><h2>${t().relations} <small>${n.links.length}</small></h2>${relationList(n.links)}</div><div class="source-box"><h2 class="eyebrow">${t().source}</h2><p>${t().sourceText}</p><code>${esc(n.source.path)}</code><span class="source-fingerprint">SHA-256 · ${n.source.sha256.slice(0,16)}… / ${catalog.snapshotDate}</span>${external('https://play-with-experiences-digital-garden.vercel.app/',t().garden)}</div></article><aside class="entry-aside"><h2>${t().backlinks} <small>${incoming.length}</small></h2>${relationList(incoming)}${link(atlasURL({cat:n.category}),t().backAtlas+' ↗','text-link')}</aside></div></div>`;
 }
 function drawingLinks(n){
  const owners=catalog.entries.filter(owner=>(owner.drawings||[]).some(d=>owner.id===n.id||d.references.some(r=>r.target===n.id)));
- return owners.length?`<div class="entry-drawing-links">${owners.map(owner=>link(href(owner.id)+'?drawing=1',`Excalidraw · ${esc(title(owner))} →`,'primary')).join('')}</div>`:'';
+ return owners.length?`<div class="entry-drawing-links">${owners.map(owner=>link(href(owner.id)+'?drawing=1',`Excalidraw · ${esc(title(owner))} →`,'text-link')).join('')}</div>`:'';
 }
-function relatedMaterials(n){
- const seen=new Set([n.id]),found=[];let frontier=[{node:n,path:[n]}];
- for(let depth=0;depth<2;depth++){
-  const next=[];for(const item of frontier)for(const e of item.node.links){const target=nodes.get(e.target);if(!target||seen.has(target.id))continue;seen.add(target.id);const path=[...item.path,target];if(target.resources?.length)found.push({node:target,path});next.push({node:target,path});}frontier=next;
- }
- return found.length?`<section class="related-materials"><h2>${lang==='zh'?'关联笔记中的素材':'Material in connected notes'}</h2>${found.map(item=>`<div class="material-path">${item.path.map(x=>link(href(x.id),esc(title(x)))).join(' → ')}</div>${resourceMarkup(item.node)}`).join('')}</section>`:'';
-}
-function resourceMarkup(n){
- if(!n.resources?.length)return '';
- const label=lang==='zh'?'原笔记中的素材与链接':'Media & links from the source';
- return `<div class="note-resources"><h2>${label}</h2>${n.resources.map((r,i)=>r.kind==='image'?`<figure><img src="${esc(r.url)}" alt="${esc(title(n))} · ${lang==='zh'?'原笔记图片':'Source image'}" loading="lazy" referrerpolicy="no-referrer"></figure>`:external(r.url,`${String(i+1).padStart(2,'0')} / ${r.label==='Video'?(lang==='zh'?'视频片段':'Video excerpt'):r.label}`)).join('')}</div>`;
+function entryMaterials(n){
+ const owners=[n,...graphData(catalog,n.id,'focus').nodes.filter(x=>x.id!==n.id)],unique=new Map();
+ for(const owner of owners)for(const r of owner.resources||[]){if(!unique.has(r.url))unique.set(r.url,{...r,owners:[]});unique.get(r.url).owners.push(owner);}
+ const items=[...unique.values()];if(!items.length)return '';
+ const source=r=>r.owners.filter(x=>x.id!==n.id).map(x=>link(href(x.id),esc(title(x)))).join(' · ');
+ return `<section class="note-resources consolidated-resources"><h2>${lang==='zh'?'素材':'Material'} <small>${items.length}</small></h2><div class="resource-gallery">${items.filter(r=>r.kind==='image').map(r=>`<figure><img src="${esc(r.url)}" alt="${esc(title(r.owners[0]))}" loading="lazy" referrerpolicy="no-referrer">${source(r)?`<figcaption>${source(r)}</figcaption>`:''}</figure>`).join('')}</div><ul class="resource-index">${items.filter(r=>r.kind!=='image').map(r=>`<li>${external(r.url,(r.label==='Video'?(lang==='zh'?'视频':'Video'):r.label))}<span>${source(r)}</span></li>`).join('')}</ul></section>`;
 }
 function formPage(i){return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:'forms'}),categoryName('forms'))}</div><span class="eyebrow">EXPERIENCE FORM / v0.3</span><h1>${t().forms[i][0]}</h1><p class="reading-subtitle">${t().forms[i][1]}</p><div class="form-feature">${scaleGraphic(i)}</div><div class="prose"><p>${t().forms[i][2]}</p><p>${t().formSub}</p><p>${lang==='zh'?'从整条曲线中取出体验段落，再关注其中反复出现的体验循环，最后落到某一个体验瞬间。':'Take a passage from the overall curve, examine recurring loops within it, then focus on a particular moment.'}</p></div><p class="editor-note">${lang==='zh'?'依据 EGDS v0.3 原图与方法论记录整理的网站导读。':'Website reading guide based on the EGDS v0.3 drawing and methodology record.'}</p>${formsMarkup()}<div class="next-layers">${link(href(catalog.hubs.feelings),t().artifactNames[1]+' ↗')}${link(atlasURL({cat:'forms'}),t().formTitle+' →')}</div></div>`;}
 function casePage(id){const c=t().cases.find(c=>c.id===id);if(!c)return notFound();return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/cases',t().caseBack)}</div><span class="eyebrow">${c.tag}</span><h1>${c.title}</h1>${caseContent(c)}</div>`;}
@@ -172,7 +167,7 @@ function render(scroll=true){
  if(landingPaths.includes(path)){
   $('#main').innerHTML=landing();
  }else if(path==='/atlas'){ $('#main').innerHTML=atlas(params);bindAtlas(params); }
- else if(path.startsWith('/entry/')){$('#main').innerHTML=entry(decodeURIComponent(path.slice(7)));const node=nodes.get(decodeURIComponent(path.slice(7)));if(node){bindDrawings(node,lang);if(params.get("drawing")){document.querySelector(".drawing-load")?.click();requestAnimationFrame(()=>document.querySelector(".excalidraw-panel")?.scrollIntoView({block:"start"}));}}}
+ else if(path.startsWith('/entry/')){$('#main').innerHTML=entry(decodeURIComponent(path.slice(7)));const node=nodes.get(decodeURIComponent(path.slice(7)));if(node){bindDrawings(node,lang);if(params.get("drawing")){const original=document.querySelector('.entry-original-drawings');if(original)original.open=true;document.querySelector(".drawing-load")?.click();requestAnimationFrame(()=>document.querySelector(".excalidraw-panel")?.scrollIntoView({block:"start"}));}}}
  else if(path.startsWith('/case/'))$('#main').innerHTML=casePage(path.slice(6));
  else $('#main').innerHTML=notFound();
  for(const img of document.querySelectorAll('.note-resources img'))bindImageViewer(img,document.querySelector('#main'),lang);
@@ -186,7 +181,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.050c84d56718.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.d0253496a8d6.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
