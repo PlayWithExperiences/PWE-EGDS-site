@@ -1,10 +1,11 @@
-import {drawingPanels,bindDrawings} from './drawing-viewer.92b01ebda20f.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.92b01ebda20f.js';
-import {mountStructureMap} from './structure-map.92b01ebda20f.js';
-import {valenceOf,displayTitle} from './feeling-groups.92b01ebda20f.js';
-import {mountNetwork,graphData} from './network.92b01ebda20f.js';
-import { marked } from './vendor/marked.92b01ebda20f.js';
-import { text } from './copy.92b01ebda20f.js';
+import {bindImageViewer} from './image-viewer.f09c175b00a6.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.f09c175b00a6.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.f09c175b00a6.js';
+import {mountStructureMap} from './structure-map.f09c175b00a6.js';
+import {valenceOf,displayTitle} from './feeling-groups.f09c175b00a6.js';
+import {mountNetwork,graphData} from './network.f09c175b00a6.js';
+import { marked } from './vendor/marked.f09c175b00a6.js';
+import { text } from './copy.f09c175b00a6.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -83,7 +84,7 @@ function networkPage(params){
 }
 function bindNetwork(params){
  function start(selected=params.get('node'),scope=params.get('scope')||'all'){
-  mountNetwork($('#relationship-network'),catalog,{lang,selected,scope,onChange:state=>{params.set('view','graph');params.set('node',state.selected);params.set('scope',state.scope);history.replaceState(null,'',atlasURL(Object.fromEntries(params)));}});
+  mountNetwork($('#relationship-network'),catalog,{lang,selected,scope,renderBody:markdown,onChange:state=>{params.set('view','graph');params.set('node',state.selected);params.set('scope',state.scope);history.replaceState(null,'',atlasURL(Object.fromEntries(params)));}});
  }
  start();$('#network-find').onchange=()=>{const value=$('#network-find').value.trim().toLocaleLowerCase();const candidates=graphData(catalog).nodes.filter(n=>[title(n)+' · '+categoryName(n.category),title(n),n.title.en,n.title.zh,n.name].some(s=>s.toLocaleLowerCase()===value));const n=candidates.length===1?candidates[0]:null;
   if(n){$('#network-search-state').textContent='';params.set('node',n.id);params.set('scope','focus');params.set('view','graph');history.replaceState(null,'',atlasURL(Object.fromEntries(params)));start(n.id,'focus');}else $('#network-search-state').textContent=lang==='zh'?'请选择下拉列表中的词条。':'Choose an entry from the list.';
@@ -156,7 +157,7 @@ function relatedMaterials(n){
 function resourceMarkup(n){
  if(!n.resources?.length)return '';
  const label=lang==='zh'?'原笔记中的素材与链接':'Media & links from the source';
- return `<div class="note-resources"><h2>${label}</h2>${n.resources.map((r,i)=>r.kind==='image'?`<figure><img src="${esc(r.url)}" alt="${esc(title(n))} · ${lang==='zh'?'原笔记图片':'Source image'}" loading="lazy" referrerpolicy="no-referrer"><figcaption>${external(r.url,lang==='zh'?'查看原始图片 ↗':'Open source image ↗')}</figcaption></figure>`:external(r.url,`${String(i+1).padStart(2,'0')} / ${r.label==='Video'?(lang==='zh'?'视频片段':'Video excerpt'):r.label}`)).join('')}</div>`;
+ return `<div class="note-resources"><h2>${label}</h2>${n.resources.map((r,i)=>r.kind==='image'?`<figure><img src="${esc(r.url)}" alt="${esc(title(n))} · ${lang==='zh'?'原笔记图片':'Source image'}" loading="lazy" referrerpolicy="no-referrer"></figure>`:external(r.url,`${String(i+1).padStart(2,'0')} / ${r.label==='Video'?(lang==='zh'?'视频片段':'Video excerpt'):r.label}`)).join('')}</div>`;
 }
 function formPage(i){return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/atlas',t().nav[2])}<span>/</span>${link(atlasURL({cat:'forms'}),categoryName('forms'))}</div><span class="eyebrow">EXPERIENCE FORM / v0.3</span><h1>${t().forms[i][0]}</h1><p class="reading-subtitle">${t().forms[i][1]}</p><div class="form-feature">${scaleGraphic(i)}</div><div class="prose"><p>${t().forms[i][2]}</p><p>${t().formSub}</p><p>${lang==='zh'?'从整条曲线中取出体验段落，再关注其中反复出现的体验循环，最后落到某一个体验瞬间。':'Take a passage from the overall curve, examine recurring loops within it, then focus on a particular moment.'}</p></div><p class="editor-note">${lang==='zh'?'依据 EGDS v0.3 原图与方法论记录整理的网站导读。':'Website reading guide based on the EGDS v0.3 drawing and methodology record.'}</p>${formsMarkup()}<div class="next-layers">${link(href(catalog.hubs.feelings),t().artifactNames[1]+' ↗')}${link(atlasURL({cat:'forms'}),t().formTitle+' →')}</div></div>`;}
 function casePage(id){const c=t().cases.find(c=>c.id===id);if(!c)return notFound();return `<div class="wrap reading-page"><div class="breadcrumbs">${link('#/cases',t().caseBack)}</div><span class="eyebrow">${c.tag}</span><h1>${c.title}</h1>${caseContent(c)}</div>`;}
@@ -164,7 +165,8 @@ function notFound(){return `<div class="wrap empty"><h1>${t().notFound}</h1>${li
 function render(scroll=true){
  const previousOverview=Boolean($('.overview-toc'));nav();const {path,params}=readURL();const landingPaths=['/','/why','/system','/cases','/about'];
  if(scroll&&previousOverview&&landingPaths.includes(path)){
-  $('#main').dataset.route=path;$('#header nav a').setAttribute('aria-current','page');
+  for(const img of document.querySelectorAll('.note-resources img'))bindImageViewer(img,document.querySelector('#main'),lang);
+ $('#main').dataset.route=path;$('#header nav a').setAttribute('aria-current','page');
   if(path==='/')window.scrollTo({top:0,behavior:'instant'});else document.getElementById(path.slice(1))?.scrollIntoView({behavior:'instant'});return;
  }
  if(landingPaths.includes(path)){
@@ -173,6 +175,7 @@ function render(scroll=true){
  else if(path.startsWith('/entry/')){$('#main').innerHTML=entry(decodeURIComponent(path.slice(7)));const node=nodes.get(decodeURIComponent(path.slice(7)));if(node){bindDrawings(node,lang);if(params.get("drawing")){document.querySelector(".drawing-load")?.click();requestAnimationFrame(()=>document.querySelector(".excalidraw-panel")?.scrollIntoView({block:"start"}));}}}
  else if(path.startsWith('/case/'))$('#main').innerHTML=casePage(path.slice(6));
  else $('#main').innerHTML=notFound();
+ for(const img of document.querySelectorAll('.note-resources img'))bindImageViewer(img,document.querySelector('#main'),lang);
  $('#main').dataset.route=path;
  const routeName=path.startsWith('/entry/')?nodes.get(path.slice(7)):null;
  document.title=(routeName?title(routeName)+' — ':'')+'EGDS · Experiential Game Design System';
@@ -183,7 +186,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.92b01ebda20f.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.f09c175b00a6.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
