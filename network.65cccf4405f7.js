@@ -1,10 +1,12 @@
-import {layoutLeverTree} from './lever-tree.2f0c75ccfdfa.js';
-import {bindImageViewer} from './image-viewer.2f0c75ccfdfa.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.2f0c75ccfdfa.js';
-import {mapFullscreen} from './map-fullscreen.2f0c75ccfdfa.js';
-import {relationName,hierarchyTypes} from './content-model.2f0c75ccfdfa.js';
-import {mapCamera} from './map-camera.2f0c75ccfdfa.js';
-import {valenceOf,displayTitle} from './feeling-groups.2f0c75ccfdfa.js';
+import {centeredRow} from './layout-row.65cccf4405f7.js';
+import {focusEdgePath} from './edge-route.65cccf4405f7.js';
+import {layoutLeverTree} from './lever-tree.65cccf4405f7.js';
+import {bindImageViewer} from './image-viewer.65cccf4405f7.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.65cccf4405f7.js';
+import {mapFullscreen} from './map-fullscreen.65cccf4405f7.js';
+import {relationName,hierarchyTypes} from './content-model.65cccf4405f7.js';
+import {mapCamera} from './map-camera.65cccf4405f7.js';
+import {valenceOf,displayTitle} from './feeling-groups.65cccf4405f7.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all',depth=1){
@@ -26,6 +28,8 @@ export function graphData(catalog, selected='', scope='all',depth=1){
   for(let hop=1;hop<Math.min(2,depth);hop++){
    const frontier=direct;for(const n of catalog.entries)for(const e of n.links)if(frontier.has(n.id)||frontier.has(e.target)){visible.add(n.id);visible.add(e.target);}
   }
+  // Category hubs are represented by the layer headings, never by peer cards.
+  for(const key of ['forms','feelings','factors','levers'])visible.delete(catalog.hubs[key]);
   pool=catalog.entries.filter(n=>visible.has(n.id));
   shownEdges=pool.flatMap(n=>n.links.filter(e=>visible.has(e.target)).map(e=>({from:n.id,to:e.target,type:e.type,origin:e.origin||'note'})));
  }
@@ -51,13 +55,13 @@ export function graphLayout(data){
   let height=95;
   groups.forEach((group,index)=>{
    const ns=rows.filter(n=>category==='feelings'?(valenceOf(n)===group||(group==='neutral'&&valenceOf(n)==='unclassified')):category==='levers'?(n.branch||'gameplay')===group:true);
-   if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:LEFT+index*384,y:y+78,width:368,columns:2});placed.push(...tree.nodes);families.push(...tree.families);height=Math.max(height,82+tree.height);return;}
+   if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:LEFT+index*384+8,y:y+78,width:368,columns:2});placed.push(...tree.nodes);families.push(...tree.families);height=Math.max(height,82+tree.height);return;}
    const columns=category==='factors'?9:3;
    const x=LEFT+(groups.length===1?0:index*384);
    let offset=0;const depths=data.depths||leverDepths(data.nodes,data.edges);
    const ranks=category==='levers'?[...new Set(ns.map(n=>depths[n.id]||0))].sort((a,b)=>a-b):[0];
    for(const rank of ranks){const row=category==='levers'?ns.filter(n=>(depths[n.id]||0)===rank):ns;
-    row.forEach((n,i)=>placed.push({...n,x:x+(i%columns)*(NW+GAP),y:y+78+offset+Math.floor(i/columns)*(NH+GAP),w:NW,h:NH}));
+    for(let i=0;i<row.length;i+=columns)placed.push(...centeredRow(row.slice(i,i+columns),{center:groups.length===1?W/2:x+192,y:y+78+offset+Math.floor(i/columns)*(NH+GAP),width:NW,height:NH,gap:GAP}));
     offset+=Math.ceil(row.length/columns)*(NH+GAP)+24;
    }
    height=Math.max(height,82+offset);
@@ -67,7 +71,7 @@ export function graphLayout(data){
  return {nodes:placed,bands,families,width:W,height:y};
 }
 export function focusLayout(data,selected){
- const root=data.nodes.find(n=>n.id===selected);if(!root)return graphLayout(data);
+ const root=data.nodes.find(n=>n.id===selected);
  // Focus changes spacing and scope, never the cognitive layer of an entry.
  const placed=[],bands=[],families=[];let y=200;
  for(const category of ['feelings','factors','levers',...(data.nodes.some(n=>!['feelings','factors','levers'].includes(n.category))?['references']:[])]){
@@ -76,13 +80,13 @@ export function focusLayout(data,selected){
   const ranks=new Map(ns.map(n=>[n.id,category==='levers'?(depths[n.id]||0):0]));
   let rowY=y+60;
   for(const rank of [...new Set(ranks.values())].sort((a,b)=>a-b)){
-   const row=ns.filter(n=>ranks.get(n.id)===rank),active=row.find(n=>n.id===selected);
-   const others=row.filter(n=>n!==active);if(active)others.splice(Math.floor(others.length/2),0,active);
+   const row=ns.filter(n=>ranks.get(n.id)===rank);const preferred=row.some(n=>n.id===selected)?selected:category==='references'?data.edges.find(e=>e.origin==='case-interpretation'&&row.some(n=>n.id===e.to))?.to:selected;const active=row.find(n=>n.id===preferred);
+   const others=row.filter(n=>n!==active);if(active)others.unshift(active);
    const cols=Math.min(5,others.length);
    for(let i=0;i<others.length;i++){
     const line=Math.floor(i/cols),count=Math.min(cols,others.length-line*cols);
-    const start=(W-count*200-(count-1)*24)/2;
-    placed.push({...others[i],x:start+(i%cols)*224,y:rowY+line*66,w:200,h:46});
+    const start=(W-count*200-(count-1)*24)/2;const position=active&&others.length<=5?W/2-100+(i===0?0:(i%2?-1:1)*Math.ceil(i/2)*224):start+(i%cols)*224;
+    placed.push({...others[i],x:position,y:rowY+line*66,w:200,h:46});
    }
    rowY+=Math.ceil(others.length/cols)*66;
   }
@@ -127,6 +131,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
     const obstructed=layout.nodes.some(n=>n.id!==a.id&&n.id!==b.id&&n.y>Math.min(a.y,b.y)&&n.y<Math.max(a.y,b.y)&&Math.abs(n.x+n.w/2-ax)<n.w/2+16);
     if(mode==='focus'&&obstructed&&Math.abs(ax-bx)<24){const side=ax+(b.category==='references'?-240:240),sign=down?1:-1;path=`M${ax} ${ay} C${side} ${ay} ${side} ${ay+sign*24} ${side} ${ay+sign*42} L${side} ${by-sign*42} C${side} ${by} ${bx} ${by-sign*24} ${bx} ${by}`;}
 }
+   if(mode==='focus')path=focusEdgePath(a,b,layout.nodes);
    html+=`<path d="${path}" class="network-edge ${hierarchy?'hierarchy-edge':''} ${e.origin==='case-interpretation'?'case-interpretation':''} ${adjacent?'highlight':mode==='all'&&current?'muted-edge':mode==='focus'?'focus-edge':''}" data-from="${e.from}" data-to="${e.to}" data-relation="${escape(e.type)}" ${hierarchy||adjacent||mode==='focus'?'marker-end="url(#recorded-arrow)"':''}><title>${escape(label(a)+' — '+e.type+' → '+label(b)+(e.origin==='case-interpretation'?(zh?'（案例解读）':' (case interpretation)'):''))}</title></path>`;
    if(hierarchy&&mode==='focus'&&(e.type==='supported by'||(adjacent&&data.edges.filter(x=>x.from===e.from&&x.type===e.type).length<=3))){const x=(a.x+a.w/2+b.x+b.w/2)/2+9,y=(a.y+a.h+b.y)/2;html+=`<text class="hierarchy-edge-label" x="${x}" y="${y}">${escape(relationName(e.type,lang))}</text>`;}
   }

@@ -1,3 +1,4 @@
+import {centeredRow} from './layout-row.65cccf4405f7.js';
 // Build a display forest from recorded containment/support edges; cross-links stay separate.
 export function leverForest(nodes,edges){
  const byId=new Map(nodes.map(n=>[n.id,n])),parent=new Map(),children=new Map(nodes.map(n=>[n.id,[]]));
@@ -10,11 +11,11 @@ export function layoutLeverTree(nodes,edges,{x=24,y=0,width=1152,columns=4}={}){
  const tree=leverForest(nodes,edges),placed=[],families=[];const gap=14,h=46,row=64;
  function node(id,left,top,w){placed.push({...tree.byId.get(id),x:left,y:top,w:Math.min(200,w),h});}
  function branch(id,left,top,w){
-  const kids=tree.children.get(id);node(id,left+14,top+14,w-28);let cursor=top+78;
+  const kids=tree.children.get(id);node(id,left+(w-Math.min(200,w-28))/2,top+14,w-28);let cursor=top+78;
   const leaves=kids.filter(k=>!tree.children.get(k).length),branches=kids.filter(k=>tree.children.get(k).length);
   const cols=Math.max(1,Math.min(columns,Math.floor((w-40)/145))),cell=(w-40-(cols-1)*gap)/cols;
-  leaves.forEach((k,i)=>node(k,left+26+(i%cols)*(cell+gap),cursor+Math.floor(i/cols)*row,cell));cursor+=Math.ceil(leaves.length/cols)*row;
-  for(const k of branches){cursor=branch(k,left+20,cursor,w-32)+14;}
+  for(let i=0;i<leaves.length;i+=cols)placed.push(...centeredRow(leaves.slice(i,i+cols).map(k=>tree.byId.get(k)),{center:left+w/2,y:cursor+Math.floor(i/cols)*row,width:Math.min(200,cell),height:h,gap}));cursor+=Math.ceil(leaves.length/cols)*row;
+  for(const k of branches){cursor=branch(k,left+16,cursor,w-32)+14;}
   if(kids.length)families.push({id,x:left,y:top,width:w,height:cursor-top+8});
   return kids.length?cursor+8:top+row;
  }
