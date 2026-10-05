@@ -245,7 +245,7 @@ export const text = {
       "Reconstruction"
     ],
     "artifactNames": [
-      "Experience form",
+      "Experience forms",
       "Subjective feelings",
       "Eliciting factors",
       "Design levers"
@@ -319,7 +319,7 @@ export const text = {
     "atlasSub": "Explore the four layers of content.",
     "atlasCta": "Explore the contents",
     "atlasSections": [
-      "Experience form",
+      "Experience forms",
       "Subjective feelings",
       "Eliciting factors",
       "Design levers",

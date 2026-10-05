@@ -1,11 +1,11 @@
-import {bindImageViewer} from './image-viewer.d0253496a8d6.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.d0253496a8d6.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.d0253496a8d6.js';
-import {mountStructureMap} from './structure-map.d0253496a8d6.js';
-import {valenceOf,displayTitle} from './feeling-groups.d0253496a8d6.js';
-import {mountNetwork,graphData} from './network.d0253496a8d6.js';
-import { marked } from './vendor/marked.d0253496a8d6.js';
-import { text } from './copy.d0253496a8d6.js';
+import {bindImageViewer} from './image-viewer.398836476dc3.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.398836476dc3.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.398836476dc3.js';
+import {mountStructureMap} from './structure-map.398836476dc3.js';
+import {valenceOf,displayTitle} from './feeling-groups.398836476dc3.js';
+import {mountNetwork,graphData} from './network.398836476dc3.js';
+import { marked } from './vendor/marked.398836476dc3.js';
+import { text } from './copy.398836476dc3.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
@@ -14,7 +14,7 @@ if(!text[lang])lang='zh';
 let catalog, nodes, names, backlinks;
 const t=()=>text[lang];
 const catKeys=['forms','feelings','factors','levers','references'];
-const english=['Experience form','Subjective feelings','Eliciting factors','Design levers'];
+const english=['Experience forms','Subjective feelings','Eliciting factors','Design levers'];
 const verbs=['Perception','Understanding','Attribution','Reconstruction'];
 const title=n=>displayTitle(n,lang);
 const statusLabel=n=>n.status==='drawing'?(lang==='zh'?'含画布':'Drawing'):n.body?t().note:t().index;
@@ -53,7 +53,7 @@ function balancedCopy(value){if(value.length<24)return esc(value);if(lang==='en'
 function landing(){return `<nav class="overview-toc wrap" aria-label="${lang==='zh'?'总览目录':'Overview contents'}">${link('#/',lang==='zh'?'↑ 页首':'↑ Top','toc-top')}${['why','system','cases','about'].map((x,i)=>link('#/'+x,lang==='zh'?t().nav[[0,1,3,4][i]]:['Why','System','Practice','About'][i])).join('')}</nav>
 <section class="hero" id="home"><div class="hero-top wrap"><div class="hero-copy"><span class="eyebrow">${t().eyebrow}</span><div class="hero-brand">EGDS<span>↗</span></div></div><div class="hero-statement"><h1>${t().hero}</h1><p class="hero-identity">${t().identity.split(' · ').map(part=>`<span class="identity-name">${esc(part)}</span>`).join('<span class="identity-separator"> · </span>')}</p><p class="hero-intro">${t().intro}</p><div class="hero-actions">${link('#/system',lang==='zh'?'了解系统 ↓':'Understand the system ↓','primary')}${link('#/atlas',t().explore+' →','text-link')}</div></div></div></section>
 <section class="wrap section" id="why"><div class="why-grid">${t().whys.map(w=>`<article><span class="eyebrow">${w[0]}</span><h3>${w[1]}</h3><p>${balancedCopy(w[2])}</p></article>`).join('')}</div><div class="north-star"><span class="north-symbol" aria-hidden="true">✳</span><div><span class="eyebrow">${t().northLabel}</span><p>${t().north}</p></div></div></section>
-<section class="system-section" id="system"><div class="wrap section"><div class="section-heading"><span class="section-no">${t().nav[1]}</span><div><h2>${(lang==='zh'?['从体验形态','深入到设计杠杆。']:['From experience form','to design levers.']).map(part=>`<span class="heading-phrase">${part}</span>`).join(lang==='zh'?'<wbr>':' <wbr>')}</h2><p>${t().systemSub}</p></div></div><div class="system-table">${[0,1,2,3].map(i=>`<article class="system-row" data-layer="${catKeys[i]}"><div class="process"><span class="row-no">0${i+1}</span><div><h3>${t().stageNames[i]}</h3><span class="small-en">${lang==='zh'?verbs[i]:text.zh.stageNames[i]}</span></div></div><span class="process-arrow" aria-hidden="true">→</span><div class="artifact">${glyph(i)}<div><h3>${t().artifactNames[i]}</h3><p>${t().stageDescriptions[i]}</p>${i===0?`<details class="form-inset"><summary>${t().formTitle}</summary>${formsMarkup()}</details>`:link(atlasURL({cat:catKeys[i]}),t().go+' →','text-link')}</div></div></article>`).join('')}</div><div class="direction"><span class="loop-symbol" aria-hidden="true">↻</span><div><h3>${t().directionTitle}</h3>${t().directionParts.map(part=>`<p class="direction-part">${part}</p>`).join('')}<p class="method-note">${t().directionNote}</p></div></div></div></section>
+<section class="system-section" id="system"><div class="wrap section"><div class="section-heading"><span class="section-no">${t().nav[1]}</span><div><h2>${(lang==='zh'?['从体验形态','深入到设计杠杆。']:['From experience forms','to design levers.']).map(part=>`<span class="heading-phrase">${part}</span>`).join(lang==='zh'?'<wbr>':' <wbr>')}</h2><p>${t().systemSub}</p></div></div><div class="system-table">${[0,1,2,3].map(i=>`<article class="system-row" data-layer="${catKeys[i]}"><div class="process"><span class="row-no">0${i+1}</span><div><h3>${t().stageNames[i]}</h3><span class="small-en">${lang==='zh'?verbs[i]:text.zh.stageNames[i]}</span></div></div><span class="process-arrow" aria-hidden="true">→</span><div class="artifact">${glyph(i)}<div><h3>${t().artifactNames[i]}</h3><p>${t().stageDescriptions[i]}</p>${i===0?`<details class="form-inset"><summary>${t().formTitle}</summary>${formsMarkup()}</details>`:link(atlasURL({cat:catKeys[i]}),t().go+' →','text-link')}</div></div></article>`).join('')}</div><div class="direction"><span class="loop-symbol" aria-hidden="true">↻</span><div><h3>${t().directionTitle}</h3>${t().directionParts.map(part=>`<p class="direction-part">${part}</p>`).join('')}<p class="method-note">${t().directionNote}</p></div></div></div></section>
 <section class="wrap section" id="cases"><div class="section-heading"><span class="section-no">${t().nav[3]}</span><div><h2>${t().casesTitle}</h2><p>${t().casesSub}</p></div></div><div class="cases-grid">${casesMarkup()}</div></section>
 <section class="about-section" id="about"><div class="wrap section about-grid"><div><span class="section-no">${t().nav[4]}</span><h2>${t().aboutTitle}</h2><span class="signature">Play With Experiences.</span></div><div><p class="about-intro">${t().aboutText}</p><p>${t().aboutNote}</p><div class="about-links">${external('https://play-with-experiences-digital-garden.vercel.app/',t().garden)}${external('https://medill-east.github.io/',t().blog)}${external('https://lhd-gamedesign.figma.site/',t().portfolio)}</div></div></div></section>`;}
 function formNode(i){return {id:'form-'+i,name:t().forms[i].join(' '),title:{zh:text.zh.forms[i][0],en:text.en.forms[i][0]},category:'forms',status:'note',body:t().forms[i][2],links:[]};}
@@ -181,7 +181,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.d0253496a8d6.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.398836476dc3.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();

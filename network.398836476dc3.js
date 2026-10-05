@@ -1,11 +1,12 @@
-import {focusEdgePath} from './edge-route.d0253496a8d6.js';
-import {layoutLeverTree} from './lever-tree.d0253496a8d6.js';
-import {bindImageViewer} from './image-viewer.d0253496a8d6.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.d0253496a8d6.js';
-import {mapFullscreen} from './map-fullscreen.d0253496a8d6.js';
-import {relationName,hierarchyTypes} from './content-model.d0253496a8d6.js';
-import {mapCamera} from './map-camera.d0253496a8d6.js';
-import {valenceOf,displayTitle} from './feeling-groups.d0253496a8d6.js';
+import {centeredRow} from './layout-row.398836476dc3.js';
+import {focusEdgePath} from './edge-route.398836476dc3.js';
+import {layoutLeverTree} from './lever-tree.398836476dc3.js';
+import {bindImageViewer} from './image-viewer.398836476dc3.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.398836476dc3.js';
+import {mapFullscreen} from './map-fullscreen.398836476dc3.js';
+import {relationName,hierarchyTypes} from './content-model.398836476dc3.js';
+import {mapCamera} from './map-camera.398836476dc3.js';
+import {valenceOf,displayTitle} from './feeling-groups.398836476dc3.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all',depth=1){
@@ -54,13 +55,13 @@ export function graphLayout(data){
   let height=95;
   groups.forEach((group,index)=>{
    const ns=rows.filter(n=>category==='feelings'?(valenceOf(n)===group||(group==='neutral'&&valenceOf(n)==='unclassified')):category==='levers'?(n.branch||'gameplay')===group:true);
-   if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:LEFT+index*384,y:y+78,width:368,columns:2});placed.push(...tree.nodes);families.push(...tree.families);height=Math.max(height,82+tree.height);return;}
+   if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:LEFT+index*384+8,y:y+78,width:368,columns:2});placed.push(...tree.nodes);families.push(...tree.families);height=Math.max(height,82+tree.height);return;}
    const columns=category==='factors'?9:3;
    const x=LEFT+(groups.length===1?0:index*384);
    let offset=0;const depths=data.depths||leverDepths(data.nodes,data.edges);
    const ranks=category==='levers'?[...new Set(ns.map(n=>depths[n.id]||0))].sort((a,b)=>a-b):[0];
    for(const rank of ranks){const row=category==='levers'?ns.filter(n=>(depths[n.id]||0)===rank):ns;
-    row.forEach((n,i)=>placed.push({...n,x:x+(i%columns)*(NW+GAP),y:y+78+offset+Math.floor(i/columns)*(NH+GAP),w:NW,h:NH}));
+    for(let i=0;i<row.length;i+=columns)placed.push(...centeredRow(row.slice(i,i+columns),{center:groups.length===1?W/2:x+192,y:y+78+offset+Math.floor(i/columns)*(NH+GAP),width:NW,height:NH,gap:GAP}));
     offset+=Math.ceil(row.length/columns)*(NH+GAP)+24;
    }
    height=Math.max(height,82+offset);
@@ -75,7 +76,7 @@ export function focusLayout(data,selected){
  const placed=[],bands=[],families=[];let y=200;
  for(const category of ['feelings','factors','levers',...(data.nodes.some(n=>!['feelings','factors','levers'].includes(n.category))?['references']:[])]){
   const ns=data.nodes.filter(n=>category==='references'?!['feelings','factors','levers'].includes(n.category):n.category===category),depths=data.depths||leverDepths(data.nodes,data.edges);
-  if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:24,y:y+56,width:1152,centerRoots:true});placed.push(...tree.nodes);families.push(...tree.families);const height=Math.max(100,tree.height+64);bands.push({category,groups:[],y,height});y+=height+24;continue;}
+  if(category==='levers'){const tree=layoutLeverTree(ns,data.edges,{x:24,y:y+56,width:1152});placed.push(...tree.nodes);families.push(...tree.families);const height=Math.max(100,tree.height+64);bands.push({category,groups:[],y,height});y+=height+24;continue;}
   const ranks=new Map(ns.map(n=>[n.id,category==='levers'?(depths[n.id]||0):0]));
   let rowY=y+60;
   for(const rank of [...new Set(ranks.values())].sort((a,b)=>a-b)){
@@ -116,7 +117,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
   data=graphData(catalog,current,mode,depth);layout=mode==='focus'?focusLayout(data,current):graphLayout(data);const map=new Map(layout.nodes.map(n=>[n.id,n]));const connected=new Set(current?[current]:[]);for(const e of data.edges)if(e.from===current||e.to===current){connected.add(e.from);connected.add(e.to);}
   svg.setAttribute('width',layout.width);svg.setAttribute('height',layout.height);
   let html=`<defs><marker id="recorded-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="currentColor"/></marker></defs>`;
-  html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience form · observation scale'}</text>`;
+  html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience forms · observation scale'}</text>`;
   const forms=zh?['体验曲线','体验段落','体验循环','体验瞬间']:['Experience curve','Experience passage','Experience loop','Experience moment'];
   forms.forEach((name,i)=>{html+=`<a href="#/entry/form-${i}" class="network-form"><rect x="${468}" y="${43+i*30}" width="264" height="26" rx="3"/><text x="${480}" y="${61+i*30}">${i+1}. ${name}</text></a>`});
   for(const band of layout.bands){html+=`<rect x="0" y="${band.y}" width="1200" height="${band.height}" class="network-band ${band.category}"/><text x="24" y="${band.y+28}" class="network-layer-title">${layerLabel[band.category]}</text>`;
