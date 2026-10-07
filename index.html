@@ -6,13 +6,19 @@
 <meta name="description" content="A growing system for understanding and designing game experience. Explore experience forms, subjective feelings, eliciting factors, design levers, and source-linked cases by 無涘.">
 <meta name="theme-color" content="#f3f0e8">
 <meta property="og:title" content="EGDS — Make sense of experience."><meta property="og:description" content="An evolving game-design system by 無涘. From experience to feelings, explanations, and design decisions."><meta property="og:type" content="website">
-<script src="./theme-init.4493de4435e7.js"></script>
-<link rel="icon" href="./favicon.4493de4435e7.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.4493de4435e7.css">
+<script src="./theme-init.a476b732084b.js"></script>
+<link rel="icon" href="./favicon.a476b732084b.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.a476b732084b.css">
 </head>
 <body>
 <a class="skip" href="#main">跳至正文 / Skip to content</a>
 <header id="header"></header>
 <main id="main" tabindex="-1"><div class="loading"><span class="wordmark">EGDS<span>↗</span></span><p>体验型游戏设计系统 · Experiential Game Design System</p><p>正在打开系统内容 / Opening the contents…</p></div></main>
 <noscript><p class="wrap">EGDS connects experience forms, subjective feelings, eliciting factors, and design levers. Enable JavaScript to browse the interactive contents, or visit the <a href="https://play-with-experiences-digital-garden.vercel.app/">Digital Garden</a>.</p></noscript>
-<footer id="footer"></footer><script type="module" src="./app.4493de4435e7.js"></script>
+<footer id="footer"></footer>
+<script>
+// Inline on purpose: a cached page can outlive its fingerprinted scripts. Reload once for the current page, then offer a reload button.
+function egdsScriptsFailed(){let reload=false;try{if(!sessionStorage.getItem('egds-reload')){sessionStorage.setItem('egds-reload','1');reload=true;}}catch{}if(reload)return location.reload();
+ document.querySelector('#main').innerHTML='<div class="wrap empty"><h1>内容加载失败，请重新加载页面。<br>Content could not be loaded. Please reload the page.</h1><button class="primary" onclick="location.reload()">重新加载 / Reload</button></div>';}
+</script>
+<script type="module" src="./app.a476b732084b.js" onload="try{sessionStorage.removeItem('egds-reload')}catch{}" onerror="egdsScriptsFailed()"></script>
 </body></html>

@@ -1,16 +1,18 @@
-import {bindImageViewer} from './image-viewer.398836476dc3.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.398836476dc3.js';
-import {contentModel,hierarchyEdges,relationName} from './content-model.398836476dc3.js';
-import {mountStructureMap} from './structure-map.398836476dc3.js';
-import {valenceOf,displayTitle} from './feeling-groups.398836476dc3.js';
-import {mountNetwork,graphData} from './network.398836476dc3.js';
-import { marked } from './vendor/marked.398836476dc3.js';
-import { text } from './copy.398836476dc3.js';
+import {bindImageViewer} from './image-viewer.a476b732084b.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.a476b732084b.js';
+import {contentModel,hierarchyEdges,relationName} from './content-model.a476b732084b.js';
+import {mountStructureMap} from './structure-map.a476b732084b.js';
+import {valenceOf,displayTitle} from './feeling-groups.a476b732084b.js';
+import {mountNetwork,graphData} from './network.a476b732084b.js';
+import { marked } from './vendor/marked.a476b732084b.js';
+import { text } from './copy.a476b732084b.js';
+import {preferredLanguage} from './language.a476b732084b.js';
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const requestedLanguage=new URLSearchParams(location.search).get('lang');
-let lang=requestedLanguage||'zh'; try {if(!requestedLanguage)lang=localStorage.getItem('egds-lang') || 'zh';} catch {}
-if(!text[lang])lang='zh';
+let savedLanguage; try {savedLanguage=localStorage.getItem('egds-lang');} catch {}
+let lang=preferredLanguage([new URLSearchParams(location.search).get('lang'),savedLanguage,...(navigator.languages||[]),navigator.language]);
+// The loading and catalog-failure states render before nav() sets this.
+document.documentElement.lang=lang==='zh'?'zh-CN':'en';
 let catalog, nodes, names, backlinks;
 const t=()=>text[lang];
 const catKeys=['forms','feelings','factors','levers','references'];
@@ -181,7 +183,7 @@ window.addEventListener('hashchange',()=>{try{render()}catch(e){console.error(e)
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey&&a&&$('.overview-toc')&&a.getAttribute('href')===location.hash&&['/','/why','/system','/cases','/about'].includes(readURL().path)){e.preventDefault();if(readURL().path==='/')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(readURL().path.slice(1))?.scrollIntoView({behavior:'smooth'})}});
 window.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#search-open').click()}});
 try{
- const response=await fetch('./data/catalog.398836476dc3.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
+ const response=await fetch('./data/catalog.a476b732084b.json');if(!response.ok)throw new Error(`Catalog HTTP ${response.status}`);catalog=contentModel(await response.json());
  nodes=new Map(catalog.entries.map(n=>[n.id,n]));names=new Map(catalog.entries.map(n=>[n.name,n]));backlinks=new Map();
  for(const n of nodes.values())for(const e of n.links){if(!backlinks.has(e.target))backlinks.set(e.target,[]);backlinks.get(e.target).push({target:n.id,type:e.type,origin:e.origin})}
  render();
