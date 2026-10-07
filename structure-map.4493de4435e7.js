@@ -1,8 +1,8 @@
-import {mapFullscreen} from './map-fullscreen.65cccf4405f7.js';
-import {mapCamera} from './map-camera.65cccf4405f7.js';
+import {mapFullscreen} from './map-fullscreen.4493de4435e7.js';
+import {mapCamera} from './map-camera.4493de4435e7.js';
 export function mountStructureMap(host,{lang='zh',onOpen=()=>{}}={}){
  const zh=lang==='zh';
- const labels=[['体验形态','Experience form'],['主观感受','Subjective feelings'],['感受诱因','Eliciting factors'],['设计杠杆','Design levers']];
+ const labels=[['体验形态','Experience forms'],['主观感受','Subjective feelings'],['感受诱因','Eliciting factors'],['设计杠杆','Design levers']];
  const keys=['forms','feelings','factors','levers'];
  const subs={
   narrative:[['叙事建构','Narrative Architecture','故事是什么','What is the story'],['叙事呈现','Narrative Exposition','故事如何讲述','How the story is told']],

@@ -1,12 +1,12 @@
-import {centeredRow} from './layout-row.65cccf4405f7.js';
-import {focusEdgePath} from './edge-route.65cccf4405f7.js';
-import {layoutLeverTree} from './lever-tree.65cccf4405f7.js';
-import {bindImageViewer} from './image-viewer.65cccf4405f7.js';
-import {drawingPanels,bindDrawings} from './drawing-viewer.65cccf4405f7.js';
-import {mapFullscreen} from './map-fullscreen.65cccf4405f7.js';
-import {relationName,hierarchyTypes} from './content-model.65cccf4405f7.js';
-import {mapCamera} from './map-camera.65cccf4405f7.js';
-import {valenceOf,displayTitle} from './feeling-groups.65cccf4405f7.js';
+import {centeredRow} from './layout-row.4493de4435e7.js';
+import {focusEdgePath} from './edge-route.4493de4435e7.js';
+import {layoutLeverTree} from './lever-tree.4493de4435e7.js';
+import {bindImageViewer} from './image-viewer.4493de4435e7.js';
+import {drawingPanels,bindDrawings} from './drawing-viewer.4493de4435e7.js';
+import {mapFullscreen} from './map-fullscreen.4493de4435e7.js';
+import {relationName,hierarchyTypes} from './content-model.4493de4435e7.js';
+import {mapCamera} from './map-camera.4493de4435e7.js';
+import {valenceOf,displayTitle} from './feeling-groups.4493de4435e7.js';
 export const GROUPS=['negative','neutral','positive'];
 const W=1200,NW=120,NH=46,GAP=8,LEFT=24;
 export function graphData(catalog, selected='', scope='all',depth=1){
@@ -117,7 +117,7 @@ export function mountNetwork(host,catalog,{lang='zh',selected='',scope='all',onC
   data=graphData(catalog,current,mode,depth);layout=mode==='focus'?focusLayout(data,current):graphLayout(data);const map=new Map(layout.nodes.map(n=>[n.id,n]));const connected=new Set(current?[current]:[]);for(const e of data.edges)if(e.from===current||e.to===current){connected.add(e.from);connected.add(e.to);}
   svg.setAttribute('width',layout.width);svg.setAttribute('height',layout.height);
   let html=`<defs><marker id="recorded-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="currentColor"/></marker></defs>`;
-  html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience form · observation scale'}</text>`;
+  html+=`<rect x="0" y="0" width="1200" height="174" class="network-band"/><text x="24" y="30" class="network-layer-title">${zh?'01 体验形态 · 观察尺度':'01 Experience forms · observation scale'}</text>`;
   const forms=zh?['体验曲线','体验段落','体验循环','体验瞬间']:['Experience curve','Experience passage','Experience loop','Experience moment'];
   forms.forEach((name,i)=>{html+=`<a href="#/entry/form-${i}" class="network-form"><rect x="${468}" y="${43+i*30}" width="264" height="26" rx="3"/><text x="${480}" y="${61+i*30}">${i+1}. ${name}</text></a>`});
   for(const band of layout.bands){html+=`<rect x="0" y="${band.y}" width="1200" height="${band.height}" class="network-band ${band.category}"/><text x="24" y="${band.y+28}" class="network-layer-title">${layerLabel[band.category]}</text>`;
